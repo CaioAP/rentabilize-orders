@@ -6,7 +6,7 @@ export default class SearchOrders {
 	constructor(readonly storeGateway: StoreGateway) {}
 
 	async execute(input: Input): Promise<any> {
-		if (new DateObject(input.date).isGreaterThan(new Date()))
+		if (new DateObject(input.date).isAfter(new Date()))
 			throw new Error('Invalid date');
 		return await this.storeGateway.getOrders(input.store, input.date);
 	}

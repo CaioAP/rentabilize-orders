@@ -37,7 +37,7 @@ test('Deve buscar os pedidos da loja', async function () {
 	stubStoreGateway.restore();
 });
 
-test('Não deve buscar os pedidos da loja com a data inválida', async function () {
+test('Não deve buscar os pedidos da loja com a data maior que o dia atual', async function () {
 	const date = new Date('2025-04-10');
 	const store = new Store(
 		'New Hair',

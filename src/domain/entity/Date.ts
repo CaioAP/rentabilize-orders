@@ -1,4 +1,4 @@
-import { compareAsc, format } from 'date-fns';
+import { format, isAfter } from 'date-fns';
 
 export default class DateObject {
 	constructor(readonly date: Date) {}
@@ -7,8 +7,7 @@ export default class DateObject {
 		return format(this.date, pattern);
 	}
 
-	isGreaterThan(date: Date): boolean {
-		const compared = compareAsc(this.date, date);
-		return compared === 1;
+	isAfter(date: Date): boolean {
+		return isAfter(this.date, date);
 	}
 }
