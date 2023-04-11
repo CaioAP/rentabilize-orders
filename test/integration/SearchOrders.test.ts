@@ -32,7 +32,6 @@ test('Deve buscar os pedidos da loja', async function () {
 		],
 	});
 	const orders = await searchOrders.execute({ store, date });
-	console.log(orders);
 	expect(orders).toHaveProperty('objects');
 	expect(orders.objects).toHaveLength(1);
 	stubStoreGateway.restore();
