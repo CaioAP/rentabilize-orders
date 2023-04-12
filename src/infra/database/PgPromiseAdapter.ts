@@ -14,6 +14,10 @@ export default class PgPromise implements Connection {
 		return this.connection.query(statement, params);
 	}
 
+	async transaction(cb: Function): Promise<any> {
+		return this.connection.tx(cb);
+	}
+
 	async close(): Promise<void> {
 		await this.connection.$pool.end();
 	}
