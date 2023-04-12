@@ -6,7 +6,7 @@ export default class PgPromise implements Connection {
 
 	constructor() {
 		this.connection = pgPromise()(
-			'postgres://rentabilizeme:56BJcAst@localhost:5432/rentabilize?schema=public'
+			'postgres://postgres:123456@localhost:5432/app',
 		);
 	}
 
