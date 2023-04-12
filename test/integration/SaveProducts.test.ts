@@ -45,8 +45,24 @@ test('Deve salvar os produtos a partir dos dados buscados da loja', async functi
 			},
 		],
 	});
-	const result = await saveProducts.execute({ store, date });
-	expect(result).toHaveLength(1);
-	expect(result[0]).toHaveProperty('sku', '13542');
+	const [result] = await saveProducts.execute({ store, date });
+	expect(result).toHaveProperty('sku', '13542');
+	stubStoreGateway.restore();
+});
+
+test('Deve alterar os produtos a partir dos dados buscados da loja', async function () {
+	const date = new Date('2023-04-10');
+	const stubStoreGateway = Sinon.stub(
+		StoreGatewayHttp.prototype,
+		'getOrders',
+	).resolves({
+		objects: [
+			{
+				...StoreData,
+			},
+		],
+	});
+	const [result] = await saveProducts.execute({ store, date });
+	expect(result).toHaveProperty('sku', '13542');
 	stubStoreGateway.restore();
 });

@@ -25,7 +25,7 @@ export default class ClientRepositoryDatabase implements ClientRepository {
 		);
 		const [client] = await this.connection.query(
 			`
-				INSERT INTO "Cliente" (id, marketing, "pessoaId")
+				INSERT INTO public."Cliente" (id, marketing, "pessoaId")
 				VALUES (uuid_generate_v4(), $1, $2)
 				RETURNING *
 			`,
@@ -49,8 +49,8 @@ export default class ClientRepositoryDatabase implements ClientRepository {
 		const [result] = await this.connection.query(
 			`
 				SELECT c.id, c.marketing, c."pessoaId", p."cpfCnpj", p.nome, p.email, p.instagram, p."dataNascimento", p.sexo
-				FROM "Cliente" c
-				INNER JOIN "Pessoa" p ON p.id = c."pessoaId"
+				FROM public."Cliente" c
+				INNER JOIN public."Pessoa" p ON p.id = c."pessoaId"
 				WHERE 1=1 ${where};
 			`,
 			[],

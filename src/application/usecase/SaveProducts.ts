@@ -24,7 +24,13 @@ export default class SaveProducts implements Usecase {
 			const dataFormatted = formatStoreData(data);
 			for (const item of dataFormatted.items) {
 				const product = new Product(item.sku, item.name, item.price);
-				const result = await this.productRepository.create(product);
+				const productExists = await this.productRepository.findById(
+					product.sku,
+				);
+				let result: Product;
+				if (!productExists)
+					result = await this.productRepository.create(product);
+				else result = await this.productRepository.update(product.sku, product);
 				output.push(result);
 			}
 		}
