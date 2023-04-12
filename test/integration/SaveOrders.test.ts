@@ -1,16 +1,16 @@
 import Sinon from 'sinon';
-import SearchOrders from '../../src/application/usecase/SearchOrders';
+import SaveOrders from '../../src/application/usecase/SaveOrders';
 import Store from '../../src/domain/entity/Store';
 import StoreGatewayHttp from '../../src/infra/gateway/StoreGatewayHttp';
 import AxiosAdapter from '../../src/infra/http/AxiosAdapter';
-import SearchOrdersStoreData from '../data/SearchOrdersStoreData';
+import SaveOrdersStoreData from '../data/StoreData';
 
-let searchOrders: SearchOrders;
+let saveOrders: SaveOrders;
 
 beforeEach(async function () {
 	const httpClient = new AxiosAdapter();
 	const storeGateway = new StoreGatewayHttp(httpClient);
-	searchOrders = new SearchOrders(storeGateway);
+	saveOrders = new SaveOrders(storeGateway);
 });
 
 test('Deve buscar os pedidos da loja', async function () {
@@ -27,11 +27,11 @@ test('Deve buscar os pedidos da loja', async function () {
 	).resolves({
 		objects: [
 			{
-				...SearchOrdersStoreData,
+				...SaveOrdersStoreData,
 			},
 		],
 	});
-	const orders = await searchOrders.execute({ store, date });
+	const orders = await saveOrders.execute({ store, date });
 	expect(orders).toHaveProperty('objects');
 	expect(orders.objects).toHaveLength(1);
 	stubStoreGateway.restore();
@@ -45,7 +45,7 @@ test('Não deve buscar os pedidos da loja com a data maior que o dia atual', asy
 		'skKeRUlClgTIwVf7RrgPOTKZcRgs4zxyecReWH4vijYJJzgTiKGir1hrYm2eaeHV4eyHFmWzKpKhpLeLOfM5za8xV5muOY33vrpLqXvaTXhOVg6gTJ4uJP7yQsbBWFlMQtapZ34AYxUD3sjATyrG0SGr1X3gB00Uz2K23k71vhLg3nIC2yigTPkf4QJFnECrI60JtJfZZ20VLpSWExeiedXTIbuIeyigpSQuWoJvpk4UkylIrHnIfPVToIIPe3IT',
 		'Senha123'
 	);
-	await expect(() => searchOrders.execute({ store, date })).rejects.toThrow(
+	await expect(() => saveOrders.execute({ store, date })).rejects.toThrow(
 		new Error('Invalid date')
 	);
 });
