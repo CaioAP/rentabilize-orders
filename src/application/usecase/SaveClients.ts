@@ -6,40 +6,36 @@ import StoreGateway from '../gateway/StoreGateway';
 import ClientRepository from '../repository/ClientRepository';
 import Usecase from './Usecase';
 
-export default class SaveOrders implements Usecase {
+export default class SaveClients implements Usecase {
 	constructor(
 		readonly storeGateway: StoreGateway,
 		readonly clientRepository: ClientRepository,
 	) {}
 
-	async execute(input: Input): Promise<any> {
+	async execute(input: Input): Promise<Output> {
 		if (new DateObject(input.date).isAfter(new Date()))
 			throw new Error('Invalid date');
-		const output: Output = {
-			clients: [],
-		};
 		const { objects } = await this.storeGateway.getOrders(
 			input.store,
 			input.date,
 		);
+		const output: Output = [];
 		for (const data of objects) {
 			const dataFormatted = formatStoreData(data);
-			await this.saveClient(dataFormatted.client);
-			output.clients.push(true);
+			const client = new Client(
+				dataFormatted.client.cpfCnpj.replace(/\D/g, ''),
+				dataFormatted.client.name,
+				dataFormatted.client.email,
+				null,
+				dataFormatted.client.birthdate || null,
+				dataFormatted.client.sex || null,
+			);
+			let result: Client = client;
+			const clientExists = await this.clientRepository.findOneByFilter(client);
+			if (!clientExists) result = await this.clientRepository.create(client);
+			output.push(result);
 		}
 		return output;
-	}
-
-	async saveClient(data: any) {
-		const client = new Client(
-			data.cpfCnpj.replace(/\D/g, ''),
-			data.name,
-			data.email,
-			data.instagram || null,
-			data.birthdate || null,
-			data.sex || null,
-		);
-		await this.clientRepository.create(client);
 	}
 }
 
@@ -48,6 +44,4 @@ type Input = {
 	date: Date;
 };
 
-type Output = {
-	clients: any[];
-};
+type Output = Client[];
