@@ -9,7 +9,7 @@ export default {
 	cliente_telefone: '(62) 91234-5678',
 	valor: '156',
 	coupon_id: '123',
-	coupon_code: 'joao11',
+	coupon_code: 'cabeluda',
 	payment_code: 'pagarme_cartao',
 	razao_social: '',
 	inscricao_estadual: '',
@@ -18,15 +18,6 @@ export default {
 	cnpj: '',
 	data_de_nascimento: '1996-05-25',
 	seu_celular: '(62) 99999-9999',
-
-	// cep: opencartSale.shipping_postcode.replace(/[^0-9]/g, ''),
-	// estado: opencartSale.ufCode,
-	// cidade: opencartSale.shipping_city,
-	// bairro: opencartSale.shipping_address_2,
-	// logradouro: opencartSale.shipping_address_1,
-	// numero: Number(opencartSale.numero.replace(/[^0-9]/g, '')) || 0,
-	// complemento: opencartSale.complemento,
-
 	shipping_address_1: 'Rua das pedras',
 	shipping_address_2: 'Bairro Feliz',
 	shipping_city: 'Goiânia',
@@ -52,9 +43,17 @@ export default {
 	date_added: '2023-04-10T15:45:16.000',
 	date_modified: '2023-04-11T11:51:23.000',
 	coupon: {
-		title: 'joao11 (teste)',
-		nomeCupom: 'joao11',
+		title: 'cabeluda (teste)',
+		nomeCupom: 'cabeluda',
 		value: '30',
+	},
+	xfeepro: {
+		title: 'I dont know',
+		value: '60',
+	},
+	productbundlestotal: {
+		title: 'I dont know either',
+		value: '6.85',
 	},
 	itens: [
 		{

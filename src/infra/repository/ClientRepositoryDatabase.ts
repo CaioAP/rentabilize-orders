@@ -9,10 +9,11 @@ export default class ClientRepositoryDatabase implements ClientRepository {
 		const [person] = await this.connection.query(
 			`
 				INSERT INTO public."Pessoa" (id, "cpfCnpj", nome, email, instagram, sexo, "dataNascimento", "dataCadastro", "dataAlteracao")
-				VALUES (uuid_generate_v4(), $1, $2, $3, $4, $5, $6, $7, $8)
+				VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 				RETURNING *
 			`,
 			[
+				data.personId,
 				data.cpfCnpj,
 				data.name,
 				data.email,
@@ -26,12 +27,14 @@ export default class ClientRepositoryDatabase implements ClientRepository {
 		const [client] = await this.connection.query(
 			`
 				INSERT INTO public."Cliente" (id, marketing, "pessoaId")
-				VALUES (uuid_generate_v4(), $1, $2)
+				VALUES ($1, $2, $3)
 				RETURNING *
 			`,
-			[true, person.id],
+			[data.id, true, person.id],
 		);
 		return new Client(
+			person.id,
+			client.id,
 			person.cpfCnpj,
 			person.nome,
 			person.email,
@@ -56,7 +59,9 @@ export default class ClientRepositoryDatabase implements ClientRepository {
 			[],
 		);
 		if (result) {
-			const client = new Client(
+			return new Client(
+				result.pessoaId,
+				result.id,
 				result.cpfCnpj,
 				result.nome,
 				result.email,
@@ -65,9 +70,6 @@ export default class ClientRepositoryDatabase implements ClientRepository {
 				result.sexo,
 				result.marketing,
 			);
-			client.setId(result.id);
-			client.setPersonId(result.pessoaId);
-			return client;
 		}
 		return null;
 	}

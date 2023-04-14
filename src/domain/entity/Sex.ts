@@ -1,5 +1,9 @@
 export default class Sex {
-	constructor(readonly sex: SexType) {}
+	value: SexType = SexType.MASCULINO;
+
+	constructor(value: 'MASCULINO' | 'FEMININO') {
+		if (value === 'FEMININO') this.value = SexType.FEMININO;
+	}
 }
 
 enum SexType {

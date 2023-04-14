@@ -1,11 +1,10 @@
-import Person from './Person';
 import Sex from './Sex';
+import Person from './Person';
 
 export default class Client extends Person {
-	id?: string;
-	personId?: string;
-
 	constructor(
+		readonly personId: string | undefined,
+		readonly id: string | undefined,
 		readonly cpfCnpj: string,
 		readonly name: string,
 		readonly email: string,
@@ -14,14 +13,6 @@ export default class Client extends Person {
 		readonly sex?: Sex | null,
 		readonly marketing = true,
 	) {
-		super(cpfCnpj, name, email, instagram, birthdate, sex);
-	}
-
-	setId(id: string): void {
-		this.id = id;
-	}
-
-	setPersonId(id: string): void {
-		this.personId = id;
+		super(personId, cpfCnpj, name, email, instagram, birthdate, sex);
 	}
 }

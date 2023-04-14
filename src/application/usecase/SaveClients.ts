@@ -1,10 +1,11 @@
+import crypto from 'crypto';
+import Usecase from './Usecase';
 import Client from '../../domain/entity/Client';
 import DateObject from '../../domain/entity/Date';
 import Store from '../../domain/entity/Store';
 import formatStoreData from '../formatter/FormatStoreData';
 import StoreGateway from '../gateway/StoreGateway';
 import ClientRepository from '../repository/ClientRepository';
-import Usecase from './Usecase';
 
 export default class SaveClients implements Usecase {
 	constructor(
@@ -23,6 +24,8 @@ export default class SaveClients implements Usecase {
 		for (const data of objects) {
 			const dataFormatted = formatStoreData(data);
 			const client = new Client(
+				crypto.randomUUID(),
+				crypto.randomUUID(),
 				dataFormatted.client.cpfCnpj.replace(/\D/g, ''),
 				dataFormatted.client.name,
 				dataFormatted.client.email,

@@ -1,9 +1,8 @@
 import Sex from './Sex';
 
 export default class Person {
-	id?: string;
-
 	constructor(
+		readonly id: string | undefined,
 		readonly cpfCnpj: string,
 		readonly name: string,
 		readonly email: string,
@@ -11,8 +10,4 @@ export default class Person {
 		readonly birthdate?: Date | null,
 		readonly sex?: Sex | null,
 	) {}
-
-	setId(id: string): void {
-		this.id = id;
-	}
 }

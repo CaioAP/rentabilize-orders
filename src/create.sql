@@ -371,3 +371,143 @@ INSERT INTO public."Loja"
 (id, nome, "chaveAcesso", senha, url, "empresaId", status, "marketplaceId")
 VALUES('2f01c15a-e882-44ac-aedf-5f2754f24404', 'Loja New Hair', 'skKeRUlClgTIwVf7RrgPOTKZcRgs4zxyecReWH4vijYJJzgTiKGir1hrYm2eaeHV4eyHFmWzKpKhpLeLOfM5za8xV5muOY33vrpLqXvaTXhOVg6gTJ4uJP7yQsbBWFlMQtapZ34AYxUD3sjATyrG0SGr1X3gB00Uz2K23k71vhLg3nIC2yigTPkf4QJFnECrI60JtJfZZ20VLpSWExeiedXTIbuIeyigpSQuWoJvpk4UkylIrHnIfPVToIIPe3IT', 'Senha2321', 'https://loja.newhairoficial.com.br', 'c975f02c-cee8-4630-9fa8-239cc590dfe1', true, '9184beee-cde8-4eed-b516-65035f99b567');
 
+INSERT INTO public."Pessoa"
+(id, "cpfCnpj", nome, email, instagram, "sexo", "dataNascimento", "dataCadastro", "dataAlteracao")
+VALUES('c5e795fb-9b98-49b4-80de-f4338fff5ebd', '11943195641', 'LETICIA LIRA', 'leticia_lira_1@hotmail.com', 'rapunzelemfoco', NULL, '1995-06-02 00:00:00.000', '2021-02-01 00:00:00.000', '2022-12-15 13:11:26.000');
+
+INSERT INTO public."Usuario"
+(id, usuario, senha, foto, acesso, "pessoaId")
+VALUES('b63553d1-3001-4078-94e5-aca0e9248157', 'lira', '$argon2id$v=19$m=4096,t=3,p=1$gTTTDUQ/8S4a+0FM3tg2hw$976GWLIpscij5LKfwS1v1wA/7UhBpUIqTDT52n21CCg', NULL, 'INFLUENCIADOR'::public."Role", 'c5e795fb-9b98-49b4-80de-f4338fff5ebd');
+
+INSERT INTO public."Influenciador"
+(id, verificado, atualizado, "usuarioId")
+VALUES('9ce732da-34a9-4adb-89c1-557693638420', true, true, 'b63553d1-3001-4078-94e5-aca0e9248157');
+
+INSERT INTO public."StatusPedido"
+(id, nome)
+VALUES('ae5afd6a-6850-4ec2-9466-964dcc3ec7be', 'Aguardando pagamento');
+INSERT INTO public."StatusPedido"
+(id, nome)
+VALUES('35be9020-e170-45c6-a9f4-e957ca373bfc', 'Aprovado');
+INSERT INTO public."StatusPedido"
+(id, nome)
+VALUES('eea65241-334c-4dba-ab96-ba6ae386254e', 'Em separação');
+INSERT INTO public."StatusPedido"
+(id, nome)
+VALUES('17f48120-1ce4-4416-a5f4-301e6a7ad910', 'Enviado');
+INSERT INTO public."StatusPedido"
+(id, nome)
+VALUES('4fc5a7dd-5d68-478b-aa1d-4f7b3ca96abb', 'Entregue');
+INSERT INTO public."StatusPedido"
+(id, nome)
+VALUES('91eaec1a-c78c-44a1-9cae-38be071033de', 'Cancelado');
+INSERT INTO public."StatusPedido"
+(id, nome)
+VALUES('47ca937c-1e52-4f2f-a89e-5b2f77d1b8e7', 'Negado');
+INSERT INTO public."StatusPedido"
+(id, nome)
+VALUES('317bf015-1c58-454e-9d6c-a518fdeb6682', 'Estornado');
+
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('933b2cad-b3d3-44dc-8265-5c53700efe62', '1', 'Aguardando pagamento', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('baff41bc-08c6-4f35-b1bd-b4b8da143219', '2', 'Processando', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('b2fa288f-ea9a-4361-8805-1ebdca7f3870', '3', 'Pagamento aprovado', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('4cd4ce2e-3e26-4fe3-a618-ead3af0da542', '4', 'Em produção', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('a58915c6-ecde-43be-ae72-b2fe5e5188cd', '5', 'Em separação', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('f2faa810-6a67-4ea9-a86b-1aed50814651', '6', 'Embalando', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('2021d177-eb08-4a10-9312-6e28902fdd42', '7', 'Enviado', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('efde8adf-e2ad-454f-9be8-99fc01bf1d9a', '8', 'Entregue', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('56bbbe53-6ea7-4590-a2b7-78403a3eb9d2', '9', 'Cancelado', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('3786ca17-8e39-4f7b-a57e-ad66b7c5cb56', '10', 'Negado', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('c2239617-0502-4faf-8e90-eb6f4be9accb', '11', 'Anulado', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('9fe212ed-84bd-454c-a4e2-c9221e13252f', '12', 'Expirado', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('53e1fba2-13c1-42dd-bbe7-f48f95d4bf82', '13', 'Falhou', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('26383fc3-4e11-40b4-aef2-c145be443dad', '14', 'Reembolsado', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('4ed604d2-09e5-4c00-a737-57b523ac6ae9', '15', 'Estornado', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('606aa8b0-1a23-4cfb-b770-918e29e6f7a8', '16', 'Chargeback', '9184beee-cde8-4eed-b516-65035f99b567');
+INSERT INTO public."MarketplaceStatus"
+(id, "idExt", nome, "marketplaceId")
+VALUES('c8ce6bd1-396a-4e5d-b52a-c2dbfdd18a4b', '17', 'Chargeback cancelado', '9184beee-cde8-4eed-b516-65035f99b567');
+
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('ae5afd6a-6850-4ec2-9466-964dcc3ec7be', '933b2cad-b3d3-44dc-8265-5c53700efe62');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('35be9020-e170-45c6-a9f4-e957ca373bfc', 'b2fa288f-ea9a-4361-8805-1ebdca7f3870');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('17f48120-1ce4-4416-a5f4-301e6a7ad910', '2021d177-eb08-4a10-9312-6e28902fdd42');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('4fc5a7dd-5d68-478b-aa1d-4f7b3ca96abb', 'efde8adf-e2ad-454f-9be8-99fc01bf1d9a');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('eea65241-334c-4dba-ab96-ba6ae386254e', '4cd4ce2e-3e26-4fe3-a618-ead3af0da542');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('91eaec1a-c78c-44a1-9cae-38be071033de', '56bbbe53-6ea7-4590-a2b7-78403a3eb9d2');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('ae5afd6a-6850-4ec2-9466-964dcc3ec7be', 'baff41bc-08c6-4f35-b1bd-b4b8da143219');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('eea65241-334c-4dba-ab96-ba6ae386254e', 'a58915c6-ecde-43be-ae72-b2fe5e5188cd');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('91eaec1a-c78c-44a1-9cae-38be071033de', 'c2239617-0502-4faf-8e90-eb6f4be9accb');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('eea65241-334c-4dba-ab96-ba6ae386254e', 'f2faa810-6a67-4ea9-a86b-1aed50814651');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('91eaec1a-c78c-44a1-9cae-38be071033de', '9fe212ed-84bd-454c-a4e2-c9221e13252f');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('91eaec1a-c78c-44a1-9cae-38be071033de', '53e1fba2-13c1-42dd-bbe7-f48f95d4bf82');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('91eaec1a-c78c-44a1-9cae-38be071033de', '606aa8b0-1a23-4cfb-b770-918e29e6f7a8');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('47ca937c-1e52-4f2f-a89e-5b2f77d1b8e7', '3786ca17-8e39-4f7b-a57e-ad66b7c5cb56');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('91eaec1a-c78c-44a1-9cae-38be071033de', 'c8ce6bd1-396a-4e5d-b52a-c2dbfdd18a4b');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('317bf015-1c58-454e-9d6c-a518fdeb6682', '26383fc3-4e11-40b4-aef2-c145be443dad');
+INSERT INTO public."StatusPedidoMapa"
+("statusPedidoId", "marketPlaceStatusId")
+VALUES('317bf015-1c58-454e-9d6c-a518fdeb6682', '4ed604d2-09e5-4c00-a737-57b523ac6ae9');
