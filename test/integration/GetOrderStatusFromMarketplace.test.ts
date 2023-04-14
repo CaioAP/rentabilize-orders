@@ -32,7 +32,7 @@ afterEach(async function () {
 	await connection.close();
 });
 
-test('Deve buscar os status de pedido pelo status do marketplace', async function () {
+test('Deve buscar os status do pedido do marketplace', async function () {
 	const input = {
 		status: 'Pagamento aprovado',
 	};

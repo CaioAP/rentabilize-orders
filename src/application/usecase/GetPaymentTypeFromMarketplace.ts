@@ -1,8 +1,9 @@
+import Usecase from './Usecase';
 import PaymentType from '../../domain/entity/PaymentType';
 import PaymentFactory from '../../domain/factory/PaymentFactory';
 import PaymentTypeRepository from '../repository/PaymentTypeRepository';
 
-export default class GetPaymentTypeFromMarketplace {
+export default class GetPaymentTypeFromMarketplace implements Usecase {
 	constructor(readonly paymentTypeRepository: PaymentTypeRepository) {}
 
 	async execute(input: Input): Promise<PaymentType> {

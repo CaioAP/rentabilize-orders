@@ -20,7 +20,7 @@ afterEach(async function () {
 	await connection.close();
 });
 
-test('Deve buscar o tipo de pagamento de pedido pelo pagamento do marketplace', async function () {
+test('Deve buscar o tipo de pagamento do pedido do marketplace', async function () {
 	const input = {
 		payment: 'pagarme_cartao',
 	};

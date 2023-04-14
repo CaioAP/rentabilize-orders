@@ -383,6 +383,10 @@ INSERT INTO public."Influenciador"
 (id, verificado, atualizado, "usuarioId")
 VALUES('9ce732da-34a9-4adb-89c1-557693638420', true, true, 'b63553d1-3001-4078-94e5-aca0e9248157');
 
+INSERT INTO public."Cupom"
+(id, nome, desconto, observacao, descricao, validade, "dataAprovacao", "dataCadastro", ativo, aprovado, "influenciadorId", "usuarioId", "empresaId", motivo)
+VALUES('09570704-3d65-4f1e-99ab-44fabb5cf662', 'CABELUDA', 30, '', '', '2050-12-13 00:00:00.000', '2022-12-28 14:45:07.000', '2021-02-01 00:00:00.000', true, true, '9ce732da-34a9-4adb-89c1-557693638420', NULL, 'c975f02c-cee8-4630-9fa8-239cc590dfe1', NULL);
+
 INSERT INTO public."StatusPedido"
 (id, nome)
 VALUES('ae5afd6a-6850-4ec2-9466-964dcc3ec7be', 'Aguardando pagamento');
