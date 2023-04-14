@@ -1,6 +1,6 @@
 import Connection from '../../src/infra/database/Connection';
 import PgPromise from '../../src/infra/database/PgPromiseAdapter';
-import GetOrderStatusFromMarketplaceStatus from '../../src/application/usecase/GetOrderStatusFromMarketplaceStatus';
+import GetOrderStatusFromMarketplace from '../../src/application/usecase/GetOrderStatusFromMarketplace';
 import OrderStatusRepository from '../../src/application/repository/OrderStatusRepository';
 import OrderSstatusRepositoryDatabase from '../../src/infra/repository/OrderStatusRepositoryDatabase';
 import OrderStatusMapRepository from '../../src/application/repository/OrderStatusMapRepository';
@@ -12,7 +12,7 @@ let connection: Connection;
 let orderStatusRepository: OrderStatusRepository;
 let orderStatusMapRepository: OrderStatusMapRepository;
 let marketplaceStatusRepository: MarketplaceStatusRepository;
-let getOrderStatusFromMarketplaceStatus: GetOrderStatusFromMarketplaceStatus;
+let getOrderStatusFromMarketplace: GetOrderStatusFromMarketplace;
 
 beforeEach(async function () {
 	connection = new PgPromise();
@@ -21,7 +21,7 @@ beforeEach(async function () {
 	marketplaceStatusRepository = new MarketplaceStatusRepositoryDatabase(
 		connection,
 	);
-	getOrderStatusFromMarketplaceStatus = new GetOrderStatusFromMarketplaceStatus(
+	getOrderStatusFromMarketplace = new GetOrderStatusFromMarketplace(
 		orderStatusRepository,
 		orderStatusMapRepository,
 		marketplaceStatusRepository,
@@ -36,6 +36,6 @@ test('Deve buscar os status de pedido pelo status do marketplace', async functio
 	const input = {
 		status: 'Pagamento aprovado',
 	};
-	const orderStatus = await getOrderStatusFromMarketplaceStatus.execute(input);
+	const orderStatus = await getOrderStatusFromMarketplace.execute(input);
 	expect(orderStatus).toHaveProperty('name', 'Aprovado');
 });

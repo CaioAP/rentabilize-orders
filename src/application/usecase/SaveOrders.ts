@@ -6,12 +6,12 @@ import Store from '../../domain/entity/Store';
 import formatStoreData from '../../infra/formatter/FormatStoreData';
 import OrderRepository from '../repository/OrderRepository';
 import SearchOrders from './SearchOrders';
-import GetOrderStatusFromMarketplaceStatus from './GetOrderStatusFromMarketplaceStatus';
+import GetOrderStatusFromMarketplace from './GetOrderStatusFromMarketplace';
 
 export default class SaveOrders implements Usecase {
 	constructor(
 		readonly searchOrders: SearchOrders,
-		readonly getOrderStatusFromMarketplaceStatus: GetOrderStatusFromMarketplaceStatus,
+		readonly getOrderStatusFromMarketplace: GetOrderStatusFromMarketplace,
 		readonly orderRepository: OrderRepository,
 	) {}
 
@@ -20,7 +20,7 @@ export default class SaveOrders implements Usecase {
 		const output: Output = [];
 		for (const data of objects) {
 			const dataFormatted = formatStoreData(data);
-			// const orderStatus = this.getOrderStatusFromMarketplaceStatus.execute(dataFormatted.status);
+			// const orderStatus = this.getOrderStatusFromMarketplace.execute(dataFormatted.status);
 			// const order = new Order(
 			//   dataFormatted.saleId,
 			//   new Price(dataFormatted.price),

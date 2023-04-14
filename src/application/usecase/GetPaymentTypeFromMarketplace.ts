@@ -2,7 +2,7 @@ import PaymentType from '../../domain/entity/PaymentType';
 import PaymentFactory from '../../domain/factory/PaymentFactory';
 import PaymentTypeRepository from '../repository/PaymentTypeRepository';
 
-export default class GetPaymentTypeFromMarketplacePayment {
+export default class GetPaymentTypeFromMarketplace {
 	constructor(readonly paymentTypeRepository: PaymentTypeRepository) {}
 
 	async execute(input: Input): Promise<PaymentType> {
