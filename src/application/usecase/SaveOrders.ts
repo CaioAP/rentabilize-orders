@@ -3,7 +3,7 @@ import DateObject from '../../domain/entity/Date';
 import Order from '../../domain/entity/Order';
 import Price from '../../domain/entity/Price';
 import Store from '../../domain/entity/Store';
-import formatStoreData from '../formatter/FormatStoreData';
+import formatStoreData from '../../infra/formatter/FormatStoreData';
 import OrderRepository from '../repository/OrderRepository';
 import SearchOrders from './SearchOrders';
 import GetOrderStatusFromMarketplaceStatus from './GetOrderStatusFromMarketplaceStatus';

@@ -3,7 +3,7 @@ import Usecase from './Usecase';
 import Client from '../../domain/entity/Client';
 import DateObject from '../../domain/entity/Date';
 import Store from '../../domain/entity/Store';
-import formatStoreData from '../formatter/FormatStoreData';
+import formatStoreData from '../../infra/formatter/FormatStoreData';
 import StoreGateway from '../gateway/StoreGateway';
 import ClientRepository from '../repository/ClientRepository';
 
