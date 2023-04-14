@@ -511,3 +511,16 @@ VALUES('317bf015-1c58-454e-9d6c-a518fdeb6682', '26383fc3-4e11-40b4-aef2-c145be44
 INSERT INTO public."StatusPedidoMapa"
 ("statusPedidoId", "marketPlaceStatusId")
 VALUES('317bf015-1c58-454e-9d6c-a518fdeb6682', '4ed604d2-09e5-4c00-a737-57b523ac6ae9');
+
+INSERT INTO public."PagamentoTipo"
+(id, nome)
+VALUES('24d069ae-fd0c-4aa6-9523-b7fc2fd4d675', 'PIX');
+INSERT INTO public."PagamentoTipo"
+(id, nome)
+VALUES('5bcbcd07-e8b7-4f1f-a05a-aacb03566640', 'Boleto');
+INSERT INTO public."PagamentoTipo"
+(id, nome)
+VALUES('89e78447-a0bc-4920-ad4d-f10dac154543', 'Cartão de crédito');
+INSERT INTO public."PagamentoTipo"
+(id, nome)
+VALUES('a0510108-fac7-42f5-a0e9-df07e303832c', 'Cartão de débito');
