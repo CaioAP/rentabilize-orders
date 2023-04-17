@@ -11,6 +11,7 @@ export default class CouponRepositoryDatabase implements CouponRepository {
 			`SELECT * FROM public."Cupom" WHERE lower(nome) LIKE lower($1)`,
 			[name],
 		);
+		if (!result) return null;
 		const coupon = new Coupon(
 			result.empresaId,
 			result.influenciadorId,

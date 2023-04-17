@@ -25,3 +25,11 @@ test('Deve buscar o cupom do pedido do marketplace', async function () {
 	const coupon = await getCouponFromMarketplace.execute(input);
 	expect(coupon).toHaveProperty('name', 'CABELUDA');
 });
+
+test('Não deve buscar o cupom caso o pedido não tenha', async function () {
+	const input = {
+		coupon: '',
+	};
+	const coupon = await getCouponFromMarketplace.execute(input);
+	expect(coupon).toBe(null);
+});
