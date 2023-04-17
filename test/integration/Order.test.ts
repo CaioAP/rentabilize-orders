@@ -81,6 +81,7 @@ beforeEach(async function () {
 	saveOrders = new SaveOrders(
 		searchOrders,
 		getOrderStatus,
+		getCoupon,
 		saveClient,
 		saveProducts,
 		orderRepository,

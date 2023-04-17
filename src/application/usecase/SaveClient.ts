@@ -1,7 +1,6 @@
 import Usecase from './Usecase';
 import Client from '../../domain/entity/Client';
 import ClientRepository from '../repository/ClientRepository';
-import crypto from 'crypto';
 import Sex from '../../domain/entity/Sex';
 import { isValid } from 'date-fns';
 
@@ -15,9 +14,9 @@ export default class SaveClient implements Usecase {
 		let birthdate: Date | null = null;
 		if (input.birthdate && isValid(input.birthdate))
 			birthdate = new Date(input.birthdate);
-		const client = new Client(
-			crypto.randomUUID(),
-			crypto.randomUUID(),
+		let client = new Client(
+			undefined,
+			undefined,
 			input.cpfCnpj,
 			input.name,
 			input.email,
@@ -26,7 +25,7 @@ export default class SaveClient implements Usecase {
 			sex,
 		);
 		const clientExists = await this.clientRepository.getByFilter(client);
-		if (!clientExists) await this.clientRepository.create(client);
+		if (!clientExists) client = await this.clientRepository.create(client);
 		return client;
 	}
 }

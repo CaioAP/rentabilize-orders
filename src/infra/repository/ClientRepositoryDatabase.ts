@@ -1,6 +1,7 @@
 import Connection from '../database/Connection';
 import ClientRepository from '../../application/repository/ClientRepository';
 import Client from '../../domain/entity/Client';
+import crypto from 'crypto';
 
 export default class ClientRepositoryDatabase implements ClientRepository {
 	constructor(readonly connection: Connection) {}
@@ -13,8 +14,8 @@ export default class ClientRepositoryDatabase implements ClientRepository {
 				RETURNING *
 			`,
 			[
-				data.personId,
-				data.cpfCnpj,
+				crypto.randomUUID(),
+				data.cpfCnpj.replace(/\D/g, ''),
 				data.name,
 				data.email,
 				data.instagram,
@@ -30,7 +31,7 @@ export default class ClientRepositoryDatabase implements ClientRepository {
 				VALUES ($1, $2, $3)
 				RETURNING *
 			`,
-			[data.id, true, person.id],
+			[crypto.randomUUID(), true, person.id],
 		);
 		return new Client(
 			person.id,

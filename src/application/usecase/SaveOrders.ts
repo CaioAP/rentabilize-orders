@@ -7,11 +7,13 @@ import SearchOrders from './SearchOrders';
 import GetOrderStatus from './GetOrderStatus';
 import SaveClient from './SaveClient';
 import SaveProducts from './SaveProducts';
+import GetCoupon from './GetCoupon';
 
 export default class SaveOrders implements Usecase {
 	constructor(
 		readonly searchOrders: SearchOrders,
 		readonly getOrderStatus: GetOrderStatus,
+		readonly getCoupon: GetCoupon,
 		readonly saveClient: SaveClient,
 		readonly saveProducts: SaveProducts,
 		readonly orderRepository: OrderRepository,
@@ -22,7 +24,7 @@ export default class SaveOrders implements Usecase {
 		const output: Output = [];
 		for (const data of objects) {
 			const dataFormatted = formatStoreData(data);
-			await this.saveProducts.execute({
+			const products = await this.saveProducts.execute({
 				storeId: input.store.id,
 				products: dataFormatted.items,
 			});
@@ -35,6 +37,9 @@ export default class SaveOrders implements Usecase {
 			});
 			const status = await this.getOrderStatus.execute({
 				status: dataFormatted.status,
+			});
+			const coupon = await this.getCoupon.execute({
+				coupon: dataFormatted.coupon,
 			});
 		}
 		return output;
