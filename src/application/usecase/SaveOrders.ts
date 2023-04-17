@@ -8,12 +8,14 @@ import GetOrderStatus from './GetOrderStatus';
 import SaveClient from './SaveClient';
 import SaveProducts from './SaveProducts';
 import GetCoupon from './GetCoupon';
+import GetInfluencerByCoupon from './GetInfluencerByCoupon';
 
 export default class SaveOrders implements Usecase {
 	constructor(
 		readonly searchOrders: SearchOrders,
 		readonly getOrderStatus: GetOrderStatus,
 		readonly getCoupon: GetCoupon,
+		readonly getInfluencerByCoupon: GetInfluencerByCoupon,
 		readonly saveClient: SaveClient,
 		readonly saveProducts: SaveProducts,
 		readonly orderRepository: OrderRepository,
@@ -39,6 +41,9 @@ export default class SaveOrders implements Usecase {
 				status: dataFormatted.status,
 			});
 			const coupon = await this.getCoupon.execute({
+				coupon: dataFormatted.coupon,
+			});
+			const influencer = await this.getInfluencerByCoupon.execute({
 				coupon: dataFormatted.coupon,
 			});
 		}

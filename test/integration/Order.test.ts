@@ -28,6 +28,9 @@ import SaveProducts from '../../src/application/usecase/SaveProducts';
 import ProductRepository from '../../src/application/repository/ProductRepository';
 import ProductRepositoryDatabase from '../../src/infra/repository/ProductRepositoryDatabase';
 import GetCoupon from '../../src/application/usecase/GetCoupon';
+import GetInfluencerByCoupon from '../../src/application/usecase/GetInfluencerByCoupon';
+import InfluencerRepository from '../../src/application/repository/InfluencerRepository';
+import InfluencerRepositoryDatabase from '../../src/infra/repository/InfluencerRepositoryDatabase';
 
 let connection: Connection;
 let searchOrders: SearchOrders;
@@ -35,6 +38,7 @@ let saveOrders: SaveOrders;
 let getOrder: GetOrder;
 let getOrderStatus: GetOrderStatus;
 let getCoupon: GetCoupon;
+let getInfluencerByCoupon: GetInfluencerByCoupon;
 let saveClient: SaveClient;
 let saveProducts: SaveProducts;
 let orderRepository: OrderRepository;
@@ -45,6 +49,7 @@ let paymentTypeRepository: PaymentTypeRepository;
 let couponRepository: CouponRepository;
 let clientRepository: ClientRepository;
 let productRepository: ProductRepository;
+let influencerRepository: InfluencerRepository;
 let store: Store;
 
 beforeEach(async function () {
@@ -68,6 +73,7 @@ beforeEach(async function () {
 	couponRepository = new CouponRepositoryDatabase(connection);
 	clientRepository = new ClientRepositoryDatabase(connection);
 	productRepository = new ProductRepositoryDatabase(connection);
+	influencerRepository = new InfluencerRepositoryDatabase(connection);
 	searchOrders = new SearchOrders(storeGateway);
 	getOrder = new GetOrder(orderRepository);
 	getOrderStatus = new GetOrderStatus(
@@ -76,12 +82,14 @@ beforeEach(async function () {
 		marketplaceStatusRepository,
 	);
 	getCoupon = new GetCoupon(couponRepository);
+	getInfluencerByCoupon = new GetInfluencerByCoupon(influencerRepository);
 	saveClient = new SaveClient(clientRepository);
 	saveProducts = new SaveProducts(productRepository);
 	saveOrders = new SaveOrders(
 		searchOrders,
 		getOrderStatus,
 		getCoupon,
+		getInfluencerByCoupon,
 		saveClient,
 		saveProducts,
 		orderRepository,
@@ -141,7 +149,7 @@ test('Deve alterar os produtos do marketplace', async function () {
 	expect(result).toHaveProperty('sku', '13542');
 });
 
-test('Deve buscar o cupom do pedido do marketplace', async function () {
+test('Deve buscar o cupom do marketplace', async function () {
 	const input = {
 		coupon: 'cabeluda',
 	};
@@ -149,11 +157,27 @@ test('Deve buscar o cupom do pedido do marketplace', async function () {
 	expect(coupon).toHaveProperty('name', 'CABELUDA');
 });
 
-test('Não deve buscar o cupom caso o pedido não tenha', async function () {
+test('Não deve buscar o cupom caso o pedido não tenha cupom', async function () {
 	const input = {
 		coupon: '',
 	};
 	const coupon = await getCoupon.execute(input);
+	expect(coupon).toBe(null);
+});
+
+test('Deve buscar o influenciador do marketplace', async function () {
+	const input = {
+		coupon: 'cabeluda',
+	};
+	const coupon = await getInfluencerByCoupon.execute(input);
+	expect(coupon).toHaveProperty('id', '9ce732da-34a9-4adb-89c1-557693638420');
+});
+
+test('Não deve buscar o influenciador caso o cupom não exista', async function () {
+	const input = {
+		coupon: 'cabeludao',
+	};
+	const coupon = await getInfluencerByCoupon.execute(input);
 	expect(coupon).toBe(null);
 });
 
