@@ -1,5 +1,4 @@
 import OrderRepository from '../../application/repository/OrderRepository';
-import DateObject from '../../domain/entity/Date';
 import Order from '../../domain/entity/Order';
 import OrderItem from '../../domain/entity/OrderItem';
 import OrderStatus from '../../domain/entity/OrderStatus';
@@ -37,8 +36,8 @@ export default class OrderRepositoryDatabase implements OrderRepository {
 			orderData.idExt,
 			new Price(orderData.valor),
 			orderData.descontos,
-			new DateObject(orderData.dataPedido),
-			new DateObject(orderData.dataAlteracao),
+			new Date(orderData.dataPedido),
+			new Date(orderData.dataAlteracao),
 			data.status,
 			data.payment,
 			orderData.lojaId,
@@ -95,8 +94,8 @@ export default class OrderRepositoryDatabase implements OrderRepository {
 			orderData.idExt,
 			new Price(orderData.valor),
 			orderData.descontos,
-			new DateObject(orderData.dataPedido),
-			new DateObject(orderData.dataAlteracao),
+			new Date(orderData.dataPedido),
+			new Date(orderData.dataAlteracao),
 			new OrderStatus(orderData.statusId, orderData.statusNome),
 			new PaymentType(orderData.pagamentoTipoId, orderData.pagamentoTipoNome),
 			orderData.lojaId,

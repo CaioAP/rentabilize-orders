@@ -13,6 +13,7 @@ let store: Store;
 
 beforeEach(async function () {
 	store = new Store(
+		'2f01c15a-e882-44ac-aedf-5f2754f24404',
 		'New Hair',
 		'https://loja.newhairoficial.com.br',
 		'skKeRUlClgTIwVf7RrgPOTKZcRgs4zxyecReWH4vijYJJzgTiKGir1hrYm2eaeHV4eyHFmWzKpKhpLeLOfM5za8xV5muOY33vrpLqXvaTXhOVg6gTJ4uJP7yQsbBWFlMQtapZ34AYxUD3sjATyrG0SGr1X3gB00Uz2K23k71vhLg3nIC2yigTPkf4QJFnECrI60JtJfZZ20VLpSWExeiedXTIbuIeyigpSQuWoJvpk4UkylIrHnIfPVToIIPe3IT',

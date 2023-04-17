@@ -2,7 +2,7 @@ import OrderStatusRepository from '../../application/repository/OrderStatusRepos
 import OrderStatus from '../../domain/entity/OrderStatus';
 import Connection from '../database/Connection';
 
-export default class OrderSstatusRepositoryDatabase
+export default class OrderStatusRepositoryDatabase
 	implements OrderStatusRepository
 {
 	constructor(readonly connection: Connection) {}

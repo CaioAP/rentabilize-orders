@@ -4,7 +4,7 @@ import MarketplaceStatusRepository from '../repository/MarketplaceStatusReposito
 import OrderStatusMapRepository from '../repository/OrderStatusMapRepository';
 import OrderStatusRepository from '../repository/OrderStatusRepository';
 
-export default class GetOrderStatusFromMarketplace implements Usecase {
+export default class GetOrderStatus implements Usecase {
 	constructor(
 		readonly orderStatusRepository: OrderStatusRepository,
 		readonly orderStatusMapRepository: OrderStatusMapRepository,

@@ -1,7 +1,6 @@
 export default class Product {
-	readonly storeId?: string;
-
 	constructor(
+		readonly storeId: string,
 		readonly sku: string,
 		readonly name: string,
 		readonly price: number,

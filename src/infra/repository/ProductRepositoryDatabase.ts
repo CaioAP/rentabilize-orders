@@ -6,19 +6,24 @@ export default class ProductRepositoryDatabase implements ProductRepository {
 	constructor(readonly connection: Connection) {}
 
 	async create(data: Product): Promise<Product> {
-		const [result] = await this.connection.query(
+		const [product] = await this.connection.query(
 			`
-      INSERT INTO public."Produto" (sku, nome, valor)
-      VALUES ($1, $2, $3)
+      INSERT INTO public."Produto" (sku, nome, valor, "lojaId")
+      VALUES ($1, $2, $3, $4)
 			RETURNING *
     `,
-			[data.sku, data.name, data.price],
+			[data.sku, data.name, data.price, data.storeId],
 		);
-		return new Product(result.sku, result.nome, result.valor);
+		return new Product(
+			product.lojaId,
+			product.sku,
+			product.nome,
+			product.valor,
+		);
 	}
 
 	async update(id: string, data: Product): Promise<Product> {
-		const [result] = await this.connection.query(
+		const [product] = await this.connection.query(
 			`
       UPDATE public."Produto" SET
       	nome = $2,
@@ -28,16 +33,26 @@ export default class ProductRepositoryDatabase implements ProductRepository {
     `,
 			[id, data.name, data.price],
 		);
-		if (!result) throw new Error('Product not found');
-		return new Product(result.sku, result.nome, result.valor);
+		if (!product) throw new Error('Product not found');
+		return new Product(
+			product.lojaId,
+			product.sku,
+			product.nome,
+			product.valor,
+		);
 	}
 
 	async findById(id: string): Promise<Product | null> {
-		const [result] = await this.connection.query(
+		const [product] = await this.connection.query(
 			`SELECT * FROM public."Produto" WHERE sku = $1`,
 			[id],
 		);
-		if (!result) return null;
-		return new Product(result.sku, result.nome, result.valor);
+		if (!product) return null;
+		return new Product(
+			product.lojaId,
+			product.sku,
+			product.nome,
+			product.valor,
+		);
 	}
 }

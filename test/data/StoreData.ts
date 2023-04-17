@@ -1,7 +1,7 @@
 export default {
 	pedido: '58123',
 	status: '1',
-	status_descricao: 'Aguardando pagamento',
+	status_descricao: 'Pagamento aprovado',
 	store_name: 'New Hair',
 	cliente_id: '123',
 	cliente: 'Joao da Silva',

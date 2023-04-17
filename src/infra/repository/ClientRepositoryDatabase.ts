@@ -18,7 +18,7 @@ export default class ClientRepositoryDatabase implements ClientRepository {
 				data.name,
 				data.email,
 				data.instagram,
-				data.sex,
+				data.sex?.value,
 				data.birthdate,
 				new Date(),
 				new Date(),
@@ -45,10 +45,11 @@ export default class ClientRepositoryDatabase implements ClientRepository {
 		);
 	}
 
-	async findOneByFilter(filter: Partial<Client>): Promise<Client | null> {
+	async getByFilter(filter: Partial<Client>): Promise<Client | null> {
 		let where = '';
 		if (filter.email) where += ` AND p.email = '${filter.email}'`;
-		if (filter.cpfCnpj) where += ` AND p."cpfCnpj" = '${filter.cpfCnpj}'`;
+		if (filter.cpfCnpj)
+			where += ` AND p."cpfCnpj" = '${filter.cpfCnpj.replace(/\D/g, '')}'`;
 		const [result] = await this.connection.query(
 			`
 				SELECT c.id, c.marketing, c."pessoaId", p."cpfCnpj", p.nome, p.email, p.instagram, p."dataNascimento", p.sexo

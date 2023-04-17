@@ -1,7 +1,5 @@
-import DateObject from './Date';
-
 export default class Coupon {
-	approvedAt?: DateObject;
+	approvedAt?: Date;
 	motive?: string;
 	stores?: string[];
 
@@ -13,8 +11,8 @@ export default class Coupon {
 		readonly discount: number,
 		readonly observation: string,
 		readonly description: string,
-		readonly expiration: DateObject,
-		readonly createdAt: DateObject,
+		readonly expiration: Date,
+		readonly createdAt: Date,
 		readonly active: boolean = true,
 		readonly approved: boolean = false,
 	) {}
@@ -27,7 +25,7 @@ export default class Coupon {
 		this.motive = motive;
 	}
 
-	setApprovedAt(approvedAt: DateObject) {
+	setApprovedAt(approvedAt: Date) {
 		this.approvedAt = approvedAt;
 	}
 }

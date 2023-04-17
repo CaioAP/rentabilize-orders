@@ -1,5 +1,3 @@
-import Coupon from './Coupon';
-import DateObject from './Date';
 import OrderItem from './OrderItem';
 import OrderStatus from './OrderStatus';
 import PaymentType from './PaymentType';
@@ -13,8 +11,8 @@ export default class Order {
 		readonly idExt: string,
 		readonly amount: Price,
 		readonly discount: Price,
-		readonly createdAt: DateObject,
-		readonly modifiedAt: DateObject,
+		readonly createdAt: Date,
+		readonly modifiedAt: Date,
 		readonly status: OrderStatus,
 		readonly payment: PaymentType,
 		readonly storeId: string,

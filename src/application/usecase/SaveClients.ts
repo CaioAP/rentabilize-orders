@@ -33,10 +33,9 @@ export default class SaveClients implements Usecase {
 				dataFormatted.client.birthdate || null,
 				dataFormatted.client.sex || null,
 			);
-			let result: Client = client;
-			const clientExists = await this.clientRepository.findOneByFilter(client);
-			if (!clientExists) result = await this.clientRepository.create(client);
-			output.push(result);
+			const clientExists = await this.clientRepository.getByFilter(client);
+			if (!clientExists) await this.clientRepository.create(client);
+			output.push(client);
 		}
 		return output;
 	}

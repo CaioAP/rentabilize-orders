@@ -1,17 +1,18 @@
 import Usecase from './Usecase';
-import DateObject from '../../domain/entity/Date';
 import Order from '../../domain/entity/Order';
-import Price from '../../domain/entity/Price';
 import Store from '../../domain/entity/Store';
 import formatStoreData from '../../infra/formatter/FormatStoreData';
 import OrderRepository from '../repository/OrderRepository';
 import SearchOrders from './SearchOrders';
-import GetOrderStatusFromMarketplace from './GetOrderStatusFromMarketplace';
+import GetOrderStatus from './GetOrderStatus';
+import SaveClient from './SaveClient';
+import Client from '../../domain/entity/Client';
 
 export default class SaveOrders implements Usecase {
 	constructor(
 		readonly searchOrders: SearchOrders,
-		readonly getOrderStatusFromMarketplace: GetOrderStatusFromMarketplace,
+		readonly getOrderStatus: GetOrderStatus,
+		readonly saveClient: SaveClient,
 		readonly orderRepository: OrderRepository,
 	) {}
 
@@ -20,15 +21,17 @@ export default class SaveOrders implements Usecase {
 		const output: Output = [];
 		for (const data of objects) {
 			const dataFormatted = formatStoreData(data);
-			// const orderStatus = this.getOrderStatusFromMarketplace.execute(dataFormatted.status);
-			// const order = new Order(
-			//   dataFormatted.saleId,
-			//   new Price(dataFormatted.price),
-			//   new Price(dataFormatted.discount),
-			//   new DateObject(new Date(dataFormatted.dateAdded)),
-			//   new DateObject(new Date(dataFormatted.dateModified)),
-			//   new OrderStatus()
-			// );
+
+			const client = await this.saveClient.execute({
+				cpfCnpj: dataFormatted.client.cpfCnpj,
+				name: dataFormatted.client.name,
+				email: dataFormatted.client.email,
+				birthdate: dataFormatted.client.birthdate,
+				sex: dataFormatted.client.sex,
+			});
+			const status = await this.getOrderStatus.execute({
+				status: dataFormatted.status,
+			});
 		}
 		return output;
 	}

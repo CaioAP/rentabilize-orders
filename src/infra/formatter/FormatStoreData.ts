@@ -8,7 +8,7 @@ export default function formatStoreData(data: any): Output {
 	if (data.coupon) discount += Number(data.coupon.value) * -1;
 	return {
 		saleId: data.pedido,
-		status: data.status,
+		status: data.status_descricao,
 		store: data.store_name,
 		price: Number(data.valor),
 		discount: Number(discount),
@@ -21,9 +21,7 @@ export default function formatStoreData(data: any): Output {
 			name: data.cliente,
 			email: data.cliente_email,
 			sex: data.sexo || null,
-			birthdate: data.data_de_nascimento
-				? new Date(data.data_de_nascimento)
-				: null,
+			birthdate: data.data_de_nascimento || null,
 			contact: {
 				telephone: data.cliente_telefone,
 				cellphone: data.seu_celular,
@@ -65,8 +63,8 @@ type Output = {
 		cpfCnpj: string;
 		name: string;
 		email: string;
-		sex?: Sex | null;
-		birthdate?: Date | null;
+		sex: string | null;
+		birthdate: Date | null;
 		contact: {
 			telephone?: string;
 			cellphone?: string;
@@ -77,7 +75,7 @@ type Output = {
 			city: string;
 			neighborhood: string;
 			street: string;
-			complement?: string;
+			complement: string | null;
 			number: number;
 		};
 	};

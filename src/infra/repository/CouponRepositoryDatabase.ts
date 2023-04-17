@@ -1,6 +1,5 @@
 import CouponRepository from '../../application/repository/CouponRepository';
 import Coupon from '../../domain/entity/Coupon';
-import DateObject from '../../domain/entity/Date';
 import Connection from '../database/Connection';
 
 export default class CouponRepositoryDatabase implements CouponRepository {
@@ -20,14 +19,14 @@ export default class CouponRepositoryDatabase implements CouponRepository {
 			result.desconto,
 			result.observacao,
 			result.descricao,
-			new DateObject(result.validade),
-			new DateObject(result.dataCadastro),
+			new Date(result.validade),
+			new Date(result.dataCadastro),
 			result.ativo,
 			result.aprovado,
 		);
 		if (result.motivo) coupon.setMotive(result.motivo);
 		if (result.dataAprovacao)
-			coupon.setApprovedAt(new DateObject(result.dataAprovacao));
+			coupon.setApprovedAt(new Date(result.dataAprovacao));
 		return coupon;
 	}
 }
