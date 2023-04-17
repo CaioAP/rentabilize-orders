@@ -108,6 +108,14 @@ test('Deve buscar um pedido não existente', async function () {
 	expect(order).toBe(null);
 });
 
+test('Deve buscar os status do pedido do marketplace', async function () {
+	const input = {
+		status: 'Pagamento aprovado',
+	};
+	const orderStatus = await getOrderStatus.execute(input);
+	expect(orderStatus).toHaveProperty('name', 'Aprovado');
+});
+
 test('Deve salvar um cliente do marketplace', async function () {
 	const client = await saveClient.execute({
 		cpfCnpj: '111.444.777-35',
