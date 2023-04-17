@@ -58,19 +58,17 @@ export default class ClientRepositoryDatabase implements ClientRepository {
 			`,
 			[],
 		);
-		if (result) {
-			return new Client(
-				result.pessoaId,
-				result.id,
-				result.cpfCnpj,
-				result.nome,
-				result.email,
-				result.instagram,
-				result.dataNascimento,
-				result.sexo,
-				result.marketing,
-			);
-		}
-		return null;
+		if (!result) return null;
+		return new Client(
+			result.pessoaId,
+			result.id,
+			result.cpfCnpj,
+			result.nome,
+			result.email,
+			result.instagram,
+			result.dataNascimento,
+			result.sexo,
+			result.marketing,
+		);
 	}
 }

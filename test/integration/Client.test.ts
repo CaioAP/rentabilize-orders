@@ -8,9 +8,11 @@ import AxiosAdapter from '../../src/infra/http/AxiosAdapter';
 import ClientRepositoryDatabase from '../../src/infra/repository/ClientRepositoryDatabase';
 import StoreData from '../data/StoreData';
 import SaveClients from '../../src/application/usecase/SaveClients';
+import GetClientFromMarketplace from '../../src/application/usecase/GetClientFromMarketplace';
 
 let connection: Connection;
 let saveClients: SaveClients;
+let getClientFromMarketplace: GetClientFromMarketplace;
 let clientRepository: ClientRepository;
 let store: Store;
 
@@ -26,6 +28,7 @@ beforeEach(async function () {
 	const storeGateway = new StoreGatewayHttp(httpClient);
 	clientRepository = new ClientRepositoryDatabase(connection);
 	saveClients = new SaveClients(storeGateway, clientRepository);
+	getClientFromMarketplace = new GetClientFromMarketplace(clientRepository);
 });
 
 afterEach(async function () {
@@ -65,4 +68,20 @@ test('Deve atualizar os clientes a partir dos dados buscados da loja', async fun
 	expect(result).toHaveLength(1);
 	expect(result[0]).toHaveProperty('name', 'Joao da Silva');
 	stubStoreGateway.restore();
+});
+
+test('Deve buscar o cliente do pedido do marketplace pelo CPF ou CNPJ', async function () {
+	const input = {
+		cpfCnpj: '11144477735',
+	};
+	const coupon = await getClientFromMarketplace.execute(input);
+	expect(coupon).toHaveProperty('cpfCnpj', '11144477735');
+});
+
+test('Deve buscar o cliente do pedido do marketplace pelo email', async function () {
+	const input = {
+		email: 'joaodasilva@hotmail.com',
+	};
+	const coupon = await getClientFromMarketplace.execute(input);
+	expect(coupon).toHaveProperty('email', 'joaodasilva@hotmail.com');
 });
