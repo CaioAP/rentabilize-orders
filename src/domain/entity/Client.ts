@@ -9,8 +9,8 @@ export default class Client extends Person {
 		readonly name: string,
 		readonly email: string,
 		readonly instagram?: string | null,
-		readonly birthdate?: Date | null,
-		readonly sex?: Sex | null,
+		birthdate?: Date | null,
+		sex?: Sex | null,
 		readonly marketing = true,
 	) {
 		super(personId, cpfCnpj, name, email, instagram, birthdate, sex);
