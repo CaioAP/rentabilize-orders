@@ -14,7 +14,7 @@ export default class SaveClient implements Usecase {
 		let birthdate: Date | null = null;
 		if (input.birthdate && isValid(input.birthdate))
 			birthdate = new Date(input.birthdate);
-		let client = new Client(
+		const client = new Client(
 			undefined,
 			undefined,
 			input.cpfCnpj,
@@ -25,8 +25,8 @@ export default class SaveClient implements Usecase {
 			sex,
 		);
 		const clientExists = await this.clientRepository.getByFilter(client);
-		if (!clientExists) client = await this.clientRepository.create(client);
-		return client;
+		if (!clientExists) return await this.clientRepository.create(client);
+		else return clientExists;
 	}
 }
 

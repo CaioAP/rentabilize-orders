@@ -10,6 +10,9 @@ import SaveProducts from './SaveProducts';
 import GetCoupon from './GetCoupon';
 import GetInfluencerByCoupon from './GetInfluencerByCoupon';
 import GetPaymentType from './GetPaymentType';
+import Price from '../../domain/entity/Price';
+import OrderItem from '../../domain/entity/OrderItem';
+import Product from '../../domain/entity/Product';
 
 export default class SaveOrders implements Usecase {
 	constructor(
@@ -51,6 +54,38 @@ export default class SaveOrders implements Usecase {
 			const influencer = await this.getInfluencerByCoupon.execute({
 				coupon: dataFormatted.coupon,
 			});
+			const orderExists: Order | null = await this.orderRepository.getByIdExt(
+				dataFormatted.saleId,
+			);
+			const order = new Order(
+				undefined,
+				dataFormatted.saleId,
+				new Price(dataFormatted.price),
+				new Price(dataFormatted.discount),
+				dataFormatted.dateAdded,
+				dataFormatted.dateModified,
+				status.id,
+				paymentType.id,
+				input.store.id,
+				String(client.id),
+				coupon?.id,
+				dataFormatted.observation,
+			);
+			for (const item of dataFormatted.items) {
+				const product = products.find((p: Product) => p.sku === item.sku);
+				if (product)
+					order.items.push(
+						new OrderItem(
+							product.sku,
+							undefined,
+							item.quantity,
+							item.ncm,
+							new Price(item.price),
+						),
+					);
+			}
+			if (!orderExists) output.push(await this.orderRepository.create(order));
+			else output.push(await this.orderRepository.update(order));
 		}
 		return output;
 	}

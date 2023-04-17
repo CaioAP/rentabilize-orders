@@ -1,10 +1,9 @@
 import OrderRepository from '../../application/repository/OrderRepository';
 import Order from '../../domain/entity/Order';
 import OrderItem from '../../domain/entity/OrderItem';
-import OrderStatus from '../../domain/entity/OrderStatus';
-import PaymentType from '../../domain/entity/PaymentType';
 import Price from '../../domain/entity/Price';
 import Connection from '../database/Connection';
+import crypto from 'crypto';
 
 export default class OrderRepositoryDatabase implements OrderRepository {
 	constructor(readonly connection: Connection) {}
@@ -17,15 +16,15 @@ export default class OrderRepositoryDatabase implements OrderRepository {
       RETURNING *;
     `,
 			[
-				data.id,
+				crypto.randomUUID(),
 				data.idExt,
-				data.amount,
-				data.discount,
+				data.amount.value,
+				data.discount.value,
 				data.createdAt,
 				data.modifiedAt,
 				data.observation,
-				data.status.id,
-				data.payment.id,
+				data.statusId,
+				data.paymentId,
 				data.clientId,
 				data.couponId,
 				data.storeId,
@@ -38,8 +37,8 @@ export default class OrderRepositoryDatabase implements OrderRepository {
 			orderData.descontos,
 			new Date(orderData.dataPedido),
 			new Date(orderData.dataAlteracao),
-			data.status,
-			data.payment,
+			orderData.statusPedidoId,
+			orderData.pagamentoTipoId,
 			orderData.lojaId,
 			orderData.clienteId,
 			orderData.couponId,
@@ -53,9 +52,9 @@ export default class OrderRepositoryDatabase implements OrderRepository {
         RETURNING * 
       `,
 				[
-					orderItem.id,
-					orderItem.amount,
-					orderItem.discount,
+					crypto.randomUUID(),
+					orderItem.amount?.value,
+					orderItem.discount?.value,
 					orderItem.quantity,
 					orderItem.ncm,
 					orderData.id,
@@ -69,21 +68,65 @@ export default class OrderRepositoryDatabase implements OrderRepository {
 					itemData.quantidade,
 					itemData.ncm,
 					new Price(itemData.valor),
-					itemData.descontos,
+					new Price(itemData.descontos),
 				),
 			);
 		}
 		return order;
 	}
 
+	async update(data: Partial<Order>): Promise<Order> {
+		const [orderData] = await this.connection.query(
+			`
+      UPDATE public."Pedido" SET 
+				"dataAlteracao" = $1, 
+				observacao = $2, 
+				"statusPedidoId" = $3
+      RETURNING *;
+    `,
+			[data.modifiedAt, data.observation, data.statusId],
+		);
+		const order = new Order(
+			orderData.id,
+			orderData.idExt,
+			new Price(orderData.valor),
+			orderData.descontos,
+			new Date(orderData.dataPedido),
+			new Date(orderData.dataAlteracao),
+			orderData.statusPedidoId,
+			orderData.pagamentoTipoId,
+			orderData.lojaId,
+			orderData.clienteId,
+			orderData.couponId,
+			orderData.observacao,
+		);
+		const itemsData = await this.connection.query(
+			`
+			SELECT * FROM public."PedidoItem"
+			WHERE "pedidoId" = $1
+		`,
+			[orderData.id],
+		);
+		itemsData.forEach((itemData: any) =>
+			order.items.push(
+				new OrderItem(
+					itemData.produtoId,
+					itemData.id,
+					itemData.quantidade,
+					itemData.ncm,
+					new Price(itemData.valor),
+					new Price(itemData.descontos),
+				),
+			),
+		);
+		return order;
+	}
+
 	async getByIdExt(id: string): Promise<Order | null> {
 		const [orderData] = await this.connection.query(
 			`
-        SELECT p.*, sp.id AS "statusId", sp.nome AS "statusNome", pt.id AS "pagamentoTipoId", pt.nome AS "pagamentoTipoNome", c
+        SELECT p.*
         FROM public."Pedido" p
-        INNER JOIN public."StatusPedido" sp ON sp.id = p."statusPedidoId"
-        INNER JOIN public."PagamentoTipo" pt ON pt.id = p."pagamentoTipoId"
-        LEFT JOIN public."Cupom" c ON c.id = p."cupomId"
         WHERE p."idExt" = $1
       `,
 			[id],
@@ -96,11 +139,11 @@ export default class OrderRepositoryDatabase implements OrderRepository {
 			orderData.descontos,
 			new Date(orderData.dataPedido),
 			new Date(orderData.dataAlteracao),
-			new OrderStatus(orderData.statusId, orderData.statusNome),
-			new PaymentType(orderData.pagamentoTipoId, orderData.pagamentoTipoNome),
+			orderData.statusPedidoId,
+			orderData.pagamentoTipoId,
 			orderData.lojaId,
 			orderData.clienteId,
-			orderData.couponId,
+			orderData.cupomId,
 			orderData.observacao,
 		);
 		const itemsData = await this.connection.query(

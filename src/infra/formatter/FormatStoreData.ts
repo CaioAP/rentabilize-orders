@@ -16,6 +16,7 @@ export default function formatStoreData(data: any): Output {
 		payment: data.payment_code,
 		dateAdded: new Date(data.date_added),
 		dateModified: new Date(data.date_modified),
+		observation: data.comment,
 		client: {
 			cpfCnpj: data.cpf || data.cnpj,
 			name: data.cliente,
@@ -40,7 +41,7 @@ export default function formatStoreData(data: any): Output {
 			(item: any): OutputItem => ({
 				saleId: item.pedido,
 				sku: item.sku,
-				ncm: item.ncm,
+				ncm: item.ncm || 0,
 				name: item.nome,
 				price: Number(item.preco_cheio),
 				quantity: Number(item.quantidade),
@@ -59,6 +60,7 @@ type Output = {
 	payment: string;
 	dateAdded: Date;
 	dateModified: Date;
+	observation: string | null;
 	client: {
 		cpfCnpj: string;
 		name: string;
@@ -85,7 +87,7 @@ type Output = {
 type OutputItem = {
 	saleId: string;
 	sku: string;
-	ncm: string;
+	ncm: number;
 	name: string;
 	price: number;
 	quantity: number;
