@@ -24,16 +24,17 @@ import OrderStatusRepositoryDatabase from '../../src/infra/repository/OrderStatu
 import PaymentTypeRepositoryDatabase from '../../src/infra/repository/PaymentTypeRepositoryDatabase';
 import StoreData from '../data/StoreData';
 import SaveClient from '../../src/application/usecase/SaveClient';
-import Client from '../../src/domain/entity/Client';
 import SaveProducts from '../../src/application/usecase/SaveProducts';
 import ProductRepository from '../../src/application/repository/ProductRepository';
 import ProductRepositoryDatabase from '../../src/infra/repository/ProductRepositoryDatabase';
+import GetCoupon from '../../src/application/usecase/GetCoupon';
 
 let connection: Connection;
 let searchOrders: SearchOrders;
 let saveOrders: SaveOrders;
 let getOrder: GetOrder;
 let getOrderStatus: GetOrderStatus;
+let getCoupon: GetCoupon;
 let saveClient: SaveClient;
 let saveProducts: SaveProducts;
 let orderRepository: OrderRepository;
@@ -74,12 +75,14 @@ beforeEach(async function () {
 		orderStatusMapRepository,
 		marketplaceStatusRepository,
 	);
+	getCoupon = new GetCoupon(couponRepository);
 	saveClient = new SaveClient(clientRepository);
 	saveProducts = new SaveProducts(productRepository);
 	saveOrders = new SaveOrders(
 		searchOrders,
 		getOrderStatus,
 		saveClient,
+		saveProducts,
 		orderRepository,
 	);
 });
@@ -137,6 +140,22 @@ test('Deve alterar os produtos do marketplace', async function () {
 	expect(result).toHaveProperty('sku', '13542');
 });
 
+test('Deve buscar o cupom do pedido do marketplace', async function () {
+	const input = {
+		coupon: 'cabeluda',
+	};
+	const coupon = await getCoupon.execute(input);
+	expect(coupon).toHaveProperty('name', 'CABELUDA');
+});
+
+test('Não deve buscar o cupom caso o pedido não tenha', async function () {
+	const input = {
+		coupon: '',
+	};
+	const coupon = await getCoupon.execute(input);
+	expect(coupon).toBe(null);
+});
+
 test('Deve salvar um pedido do marketplace', async function () {
 	const date = new Date('2023-04-10');
 	const stubStoreGateway = Sinon.stub(
@@ -153,38 +172,3 @@ test('Deve salvar um pedido do marketplace', async function () {
 	expect(order).toHaveProperty('idExt', '58123');
 	stubStoreGateway.restore();
 });
-
-// test('Deve salvar os pedidos a partir dos dados buscados da loja', async function () {
-// 	const date = new Date('2023-04-10');
-// 	const stubStoreGateway = Sinon.stub(
-// 		StoreGatewayHttp.prototype,
-// 		'getOrders',
-// 	).resolves({
-// 		objects: [
-// 			{
-// 				...StoreData,
-// 			},
-// 		],
-// 	});
-// 	const [result] = await saveOrders.execute({ store, date });
-// 	expect(result).toHaveProperty('idExt', '58123');
-// 	stubStoreGateway.restore();
-// });
-
-// test.skip('Deve atualizar os pedidos a partir dos dados buscados da loja', async function () {
-// 	const date = new Date('2023-04-10');
-// 	const stubStoreGateway = Sinon.stub(
-// 		StoreGatewayHttp.prototype,
-// 		'getOrders',
-// 	).resolves({
-// 		objects: [
-// 			{
-// 				...StoreData,
-// 			},
-// 		],
-// 	});
-// 	const result = await saveOrders.execute({ store, date });
-// 	expect(result).toHaveLength(1);
-// 	expect(result[0]).toHaveProperty('idExt', '58123');
-// 	stubStoreGateway.restore();
-// });
