@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"test": "psql -U postgres -d app -f src/create.sql && npx jest"
+		"test": "psql -U postgres -d app -f src/create.sql && node --expose-gc ./node_modules/.bin/jest --runInBand --logHeapUsage"
 	},
 	"keywords": [],
 	"author": "",
