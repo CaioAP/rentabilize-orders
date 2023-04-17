@@ -9,11 +9,13 @@ import SaveClient from './SaveClient';
 import SaveProducts from './SaveProducts';
 import GetCoupon from './GetCoupon';
 import GetInfluencerByCoupon from './GetInfluencerByCoupon';
+import GetPaymentType from './GetPaymentType';
 
 export default class SaveOrders implements Usecase {
 	constructor(
 		readonly searchOrders: SearchOrders,
 		readonly getOrderStatus: GetOrderStatus,
+		readonly getPaymentType: GetPaymentType,
 		readonly getCoupon: GetCoupon,
 		readonly getInfluencerByCoupon: GetInfluencerByCoupon,
 		readonly saveClient: SaveClient,
@@ -30,15 +32,18 @@ export default class SaveOrders implements Usecase {
 				storeId: input.store.id,
 				products: dataFormatted.items,
 			});
+			const status = await this.getOrderStatus.execute({
+				status: dataFormatted.status,
+			});
+			const paymentType = await this.getPaymentType.execute({
+				payment: dataFormatted.payment,
+			});
 			const client = await this.saveClient.execute({
 				cpfCnpj: dataFormatted.client.cpfCnpj,
 				name: dataFormatted.client.name,
 				email: dataFormatted.client.email,
 				birthdate: dataFormatted.client.birthdate,
 				sex: dataFormatted.client.sex,
-			});
-			const status = await this.getOrderStatus.execute({
-				status: dataFormatted.status,
 			});
 			const coupon = await this.getCoupon.execute({
 				coupon: dataFormatted.coupon,

@@ -31,12 +31,14 @@ import GetCoupon from '../../src/application/usecase/GetCoupon';
 import GetInfluencerByCoupon from '../../src/application/usecase/GetInfluencerByCoupon';
 import InfluencerRepository from '../../src/application/repository/InfluencerRepository';
 import InfluencerRepositoryDatabase from '../../src/infra/repository/InfluencerRepositoryDatabase';
+import GetPaymentType from '../../src/application/usecase/GetPaymentType';
 
 let connection: Connection;
 let searchOrders: SearchOrders;
 let saveOrders: SaveOrders;
 let getOrder: GetOrder;
 let getOrderStatus: GetOrderStatus;
+let getPaymentType: GetPaymentType;
 let getCoupon: GetCoupon;
 let getInfluencerByCoupon: GetInfluencerByCoupon;
 let saveClient: SaveClient;
@@ -81,6 +83,7 @@ beforeEach(async function () {
 		orderStatusMapRepository,
 		marketplaceStatusRepository,
 	);
+	getPaymentType = new GetPaymentType(paymentTypeRepository);
 	getCoupon = new GetCoupon(couponRepository);
 	getInfluencerByCoupon = new GetInfluencerByCoupon(influencerRepository);
 	saveClient = new SaveClient(clientRepository);
@@ -88,6 +91,7 @@ beforeEach(async function () {
 	saveOrders = new SaveOrders(
 		searchOrders,
 		getOrderStatus,
+		getPaymentType,
 		getCoupon,
 		getInfluencerByCoupon,
 		saveClient,
@@ -114,6 +118,14 @@ test('Deve buscar os status do pedido do marketplace', async function () {
 	};
 	const orderStatus = await getOrderStatus.execute(input);
 	expect(orderStatus).toHaveProperty('name', 'Aprovado');
+});
+
+test('Deve buscar o tipo de pagamento do pedido do marketplace', async function () {
+	const input = {
+		payment: 'pagarme_cartao',
+	};
+	const paymentType = await getPaymentType.execute(input);
+	expect(paymentType).toHaveProperty('name', 'Cartão de crédito');
 });
 
 test('Deve salvar um cliente do marketplace', async function () {
