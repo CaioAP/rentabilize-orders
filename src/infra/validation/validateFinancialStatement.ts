@@ -1,14 +1,13 @@
 import DateObject from '../../domain/entity/Date';
-import validateOrderStatusApproved from './validateOrderStatusApproved';
+import OrderStatus, { StatusName } from '../../domain/entity/OrderStatus';
 
 export default function validateFinancialStatement(
 	statementId: string | null,
 	date: Date,
-	status: string,
+	status: StatusName,
 ) {
+	const orderStatus = new OrderStatus(undefined, status);
 	return (
-		!statementId &&
-		new DateObject(date).isToday() &&
-		validateOrderStatusApproved(status)
+		!statementId && new DateObject(date).isToday() && orderStatus.isApproved()
 	);
 }

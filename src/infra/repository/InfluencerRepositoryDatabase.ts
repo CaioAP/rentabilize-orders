@@ -36,4 +36,32 @@ export default class InfluencerRepositoryDatabase
 			result.atualizado,
 		);
 	}
+
+	async getInviter(
+		inviterId: string,
+		companyId: string,
+	): Promise<Influencer | null> {
+		const [influencerData] = await this.connection.query(
+			`
+			SELECT p.*, p.id AS "pessoaId", u.id AS "usuarioId", u.usuario, i.id
+			FROM public."Influenciador" i
+			INNER JOIN public."Usuario" u ON u.id = i."usuarioId"
+			INNER JOIN public."Pessoa" p ON p.id = u."pessoaId"
+			INNER JOIN public."InfluenciadorPorEmpresa" ipe ON i.id = ipe."convidanteId"
+			WHERE ipe."convidadoId" = $1
+				AND ipe."empresaId" = $2
+		`,
+			[inviterId, companyId],
+		);
+		if (!influencerData) return null;
+		return new Influencer(
+			influencerData.pessoaId,
+			influencerData.usuarioId,
+			influencerData.id,
+			influencerData.cpfCnpj,
+			influencerData.nome,
+			influencerData.email,
+			influencerData.usuario,
+		);
+	}
 }

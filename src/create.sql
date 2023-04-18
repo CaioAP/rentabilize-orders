@@ -367,6 +367,13 @@ INSERT INTO public."Empresa"
 (id, "razaoSocial", cnae, "inscricaoMunicipal", "inscricaoEstadual", "certificadoDigital", logo, "nivelRepasse", "conviteValor", "pessoaId")
 VALUES('c975f02c-cee8-4630-9fa8-239cc590dfe1', 'BRK LOGISTICA E DISTRIBUICAO EIRELI', NULL, NULL, '107446154', NULL, NULL, 1, 180, '5f3c509b-9cdb-4d7f-a2bc-29c703183fab');
 
+INSERT INTO public."EmpresaComissao"
+(id, comissao, nivel, "empresaId")
+VALUES('c8fbd6e0-9400-4900-b485-d6305ce1518d', 8.0, 1, 'c975f02c-cee8-4630-9fa8-239cc590dfe1');
+INSERT INTO public."EmpresaComissao"
+(id, comissao, nivel, "empresaId")
+VALUES('dba2dfdd-111e-43fb-b2d9-28446bdba186', 2.0, 2, 'c975f02c-cee8-4630-9fa8-239cc590dfe1');
+
 INSERT INTO public."Loja"
 (id, nome, "chaveAcesso", senha, url, "empresaId", status, "marketplaceId")
 VALUES('2f01c15a-e882-44ac-aedf-5f2754f24404', 'Loja New Hair', 'skKeRUlClgTIwVf7RrgPOTKZcRgs4zxyecReWH4vijYJJzgTiKGir1hrYm2eaeHV4eyHFmWzKpKhpLeLOfM5za8xV5muOY33vrpLqXvaTXhOVg6gTJ4uJP7yQsbBWFlMQtapZ34AYxUD3sjATyrG0SGr1X3gB00Uz2K23k71vhLg3nIC2yigTPkf4QJFnECrI60JtJfZZ20VLpSWExeiedXTIbuIeyigpSQuWoJvpk4UkylIrHnIfPVToIIPe3IT', 'Senha2321', 'https://loja.newhairoficial.com.br', 'c975f02c-cee8-4630-9fa8-239cc590dfe1', true, '9184beee-cde8-4eed-b516-65035f99b567');
@@ -374,14 +381,27 @@ VALUES('2f01c15a-e882-44ac-aedf-5f2754f24404', 'Loja New Hair', 'skKeRUlClgTIwVf
 INSERT INTO public."Pessoa"
 (id, "cpfCnpj", nome, email, instagram, "sexo", "dataNascimento", "dataCadastro", "dataAlteracao")
 VALUES('c5e795fb-9b98-49b4-80de-f4338fff5ebd', '11943195641', 'LETICIA LIRA', 'leticia_lira_1@hotmail.com', 'rapunzelemfoco', NULL, '1995-06-02 00:00:00.000', '2021-02-01 00:00:00.000', '2022-12-15 13:11:26.000');
+INSERT INTO public."Pessoa"
+(id, "cpfCnpj", nome, email, instagram, "sexo", "dataNascimento", "dataCadastro", "dataAlteracao")
+VALUES('113904f9-b698-4ce6-b317-beacb9b7a684', '02190889189', 'LARISSA COSTA', 'larissacostaesteticista@gmail.com', 'larissacostabs', NULL, '1997-08-25 00:00:00.000', '2021-02-01 00:00:00.000', '2022-12-15 13:11:31.000');
 
 INSERT INTO public."Usuario"
 (id, usuario, senha, foto, acesso, "pessoaId")
 VALUES('b63553d1-3001-4078-94e5-aca0e9248157', 'lira', '$argon2id$v=19$m=4096,t=3,p=1$gTTTDUQ/8S4a+0FM3tg2hw$976GWLIpscij5LKfwS1v1wA/7UhBpUIqTDT52n21CCg', NULL, 'INFLUENCIADOR'::public."Role", 'c5e795fb-9b98-49b4-80de-f4338fff5ebd');
+INSERT INTO public."Usuario"
+(id, usuario, senha, foto, acesso, "pessoaId")
+VALUES('427719ec-8bc2-457e-81a5-0267abe1d36d', 'larissa', '$argon2id$v=19$m=4096,t=3,p=1$lumGT16LJnr/Rx9+uPZ1Pw$FH0bpHCm9GTq32D4nAKEBi5PmMj+pL2vODjCpPdmFpc', NULL, 'INFLUENCIADOR'::public."Role", '113904f9-b698-4ce6-b317-beacb9b7a684');
 
 INSERT INTO public."Influenciador"
 (id, verificado, atualizado, "usuarioId")
 VALUES('9ce732da-34a9-4adb-89c1-557693638420', true, true, 'b63553d1-3001-4078-94e5-aca0e9248157');
+INSERT INTO public."Influenciador"
+(id, verificado, atualizado, "usuarioId")
+VALUES('150c98aa-4ea1-4329-91e1-fb5ff1b6701e', true, true, '427719ec-8bc2-457e-81a5-0267abe1d36d');
+
+INSERT INTO public."InfluenciadorPorEmpresa"
+(id, "qualificado", "empresaId", "convidadoId", "convidanteId")
+VALUES('2d5f62ed-c62d-4930-b6ae-ca04a6924003', 'APROVADO'::public."Qualificado", 'c975f02c-cee8-4630-9fa8-239cc590dfe1', '150c98aa-4ea1-4329-91e1-fb5ff1b6701e', '9ce732da-34a9-4adb-89c1-557693638420');
 
 INSERT INTO public."Cupom"
 (id, nome, desconto, observacao, descricao, validade, "dataAprovacao", "dataCadastro", ativo, aprovado, "influenciadorId", "usuarioId", "empresaId", motivo)

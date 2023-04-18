@@ -60,7 +60,7 @@ export default class SaveOrders implements Usecase {
 				new Price(dataFormatted.discount),
 				dataFormatted.dateAdded,
 				dataFormatted.dateModified,
-				status.id,
+				String(status.id),
 				paymentType.id,
 				input.store.id,
 				String(client.id),
