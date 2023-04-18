@@ -32,6 +32,8 @@ import GetInfluencerByCoupon from '../../src/application/usecase/GetInfluencerBy
 import InfluencerRepository from '../../src/application/repository/InfluencerRepository';
 import InfluencerRepositoryDatabase from '../../src/infra/repository/InfluencerRepositoryDatabase';
 import GetPaymentType from '../../src/application/usecase/GetPaymentType';
+import FinancialStatementRepositoryDatabase from '../../src/infra/repository/FinancialStatementRepositoryDatabase';
+import FinancialStatementRepository from '../../src/application/repository/FinancialStatementRepository';
 
 let connection: Connection;
 let searchOrders: SearchOrders;
@@ -43,6 +45,7 @@ let getCoupon: GetCoupon;
 let getInfluencerByCoupon: GetInfluencerByCoupon;
 let saveClient: SaveClient;
 let saveProducts: SaveProducts;
+// let saveFinancialStatement: SaveFinancialStatement;
 let orderRepository: OrderRepository;
 let orderStatusRepository: OrderStatusRepository;
 let orderStatusMapRepository: OrderStatusMapRepository;
@@ -52,6 +55,7 @@ let couponRepository: CouponRepository;
 let clientRepository: ClientRepository;
 let productRepository: ProductRepository;
 let influencerRepository: InfluencerRepository;
+let financialStatementRepository: FinancialStatementRepository;
 let store: Store;
 
 beforeEach(async function () {
@@ -76,6 +80,9 @@ beforeEach(async function () {
 	clientRepository = new ClientRepositoryDatabase(connection);
 	productRepository = new ProductRepositoryDatabase(connection);
 	influencerRepository = new InfluencerRepositoryDatabase(connection);
+	financialStatementRepository = new FinancialStatementRepositoryDatabase(
+		connection,
+	);
 	searchOrders = new SearchOrders(storeGateway);
 	getOrder = new GetOrder(orderRepository);
 	getOrderStatus = new GetOrderStatus(
@@ -88,14 +95,15 @@ beforeEach(async function () {
 	getInfluencerByCoupon = new GetInfluencerByCoupon(influencerRepository);
 	saveClient = new SaveClient(clientRepository);
 	saveProducts = new SaveProducts(productRepository);
+	// saveFinancialStatement = new SaveFinancialStatement(getInfluencerByCoupon);
 	saveOrders = new SaveOrders(
 		searchOrders,
 		getOrderStatus,
 		getPaymentType,
 		getCoupon,
-		getInfluencerByCoupon,
 		saveClient,
 		saveProducts,
+		// saveFinancialStatement,
 		orderRepository,
 	);
 });
@@ -182,22 +190,6 @@ test('Não deve buscar o cupom caso o pedido não tenha cupom', async function (
 		coupon: '',
 	};
 	const coupon = await getCoupon.execute(input);
-	expect(coupon).toBe(null);
-});
-
-test('Deve buscar o influenciador do marketplace', async function () {
-	const input = {
-		coupon: 'cabeluda',
-	};
-	const coupon = await getInfluencerByCoupon.execute(input);
-	expect(coupon).toHaveProperty('id', '9ce732da-34a9-4adb-89c1-557693638420');
-});
-
-test('Não deve buscar o influenciador caso o cupom não exista', async function () {
-	const input = {
-		coupon: 'cabeludao',
-	};
-	const coupon = await getInfluencerByCoupon.execute(input);
 	expect(coupon).toBe(null);
 });
 

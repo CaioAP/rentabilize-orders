@@ -1,10 +1,16 @@
-import { format, isAfter, isDate, isValid, parse } from 'date-fns';
+import { format, isAfter, isDate, isToday, isValid, parse } from 'date-fns';
 
 export default class DateObject {
 	constructor(readonly value: Date | string) {}
 
 	format(pattern: string) {
 		return format(new Date(this.value), pattern);
+	}
+
+	parse(): Date {
+		if (typeof this.value === 'string')
+			return parse(this.value, 'yyyy-MM-dd', new Date());
+		return this.value;
 	}
 
 	isValid(): boolean {
@@ -15,9 +21,7 @@ export default class DateObject {
 		return isAfter(new Date(this.value), date);
 	}
 
-	parse(): Date {
-		if (typeof this.value === 'string')
-			return parse(this.value, 'yyyy-MM-dd', new Date());
-		return this.value;
+	isToday(): boolean {
+		return isToday(new Date(this.value));
 	}
 }

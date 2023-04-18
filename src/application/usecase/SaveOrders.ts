@@ -8,7 +8,6 @@ import GetOrderStatus from './GetOrderStatus';
 import SaveClient from './SaveClient';
 import SaveProducts from './SaveProducts';
 import GetCoupon from './GetCoupon';
-import GetInfluencerByCoupon from './GetInfluencerByCoupon';
 import GetPaymentType from './GetPaymentType';
 import Price from '../../domain/entity/Price';
 import OrderItem from '../../domain/entity/OrderItem';
@@ -20,9 +19,9 @@ export default class SaveOrders implements Usecase {
 		readonly getOrderStatus: GetOrderStatus,
 		readonly getPaymentType: GetPaymentType,
 		readonly getCoupon: GetCoupon,
-		readonly getInfluencerByCoupon: GetInfluencerByCoupon,
 		readonly saveClient: SaveClient,
 		readonly saveProducts: SaveProducts,
+		// readonly saveFinancialStatement: SaveFinancialStatement,
 		readonly orderRepository: OrderRepository,
 	) {}
 
@@ -49,9 +48,6 @@ export default class SaveOrders implements Usecase {
 				sex: dataFormatted.client.sex,
 			});
 			const coupon = await this.getCoupon.execute({
-				coupon: dataFormatted.coupon,
-			});
-			const influencer = await this.getInfluencerByCoupon.execute({
 				coupon: dataFormatted.coupon,
 			});
 			const orderExists: Order | null = await this.orderRepository.getByIdExt(
@@ -86,6 +82,7 @@ export default class SaveOrders implements Usecase {
 			}
 			if (!orderExists) output.push(await this.orderRepository.create(order));
 			else output.push(await this.orderRepository.update(order));
+			// await this.saveFinancialStatement.execute();
 		}
 		return output;
 	}
