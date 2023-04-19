@@ -1,3 +1,5 @@
+import DateObject from './Date';
+import OrderStatus, { StatusName } from './OrderStatus';
 import Price from './Price';
 
 export default class FinancialStatement {
@@ -18,5 +20,13 @@ export default class FinancialStatement {
 	) {
 		this.saleId = saleId;
 		this.userId = userId;
+	}
+
+	isValidToCreate(status: StatusName): boolean {
+		return (
+			!!this.id &&
+			new DateObject(this.date).isToday() &&
+			new OrderStatus(undefined, status).isApproved()
+		);
 	}
 }

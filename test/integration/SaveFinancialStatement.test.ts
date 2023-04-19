@@ -133,7 +133,7 @@ test('Não deve buscar extrato financeiro inexistente', async function () {
 	expect(financialStatement).toBe(null);
 });
 
-test('Deve criar o extrato financeiro do pedido', async function () {
+test('Deve salvar o extrato financeiro do pedido', async function () {
 	const financialStatementData = new FinancialStatement(
 		'c975f02c-cee8-4630-9fa8-239cc590dfe1',
 		'9ce732da-34a9-4adb-89c1-557693638420',
@@ -172,6 +172,35 @@ test('Deve buscar extrato financeiro pelo pedido, empresa e influenciador', asyn
 		input.saleId,
 		input.companyId,
 		input.influencerId,
+	);
+	expect(financialStatement).toHaveProperty(
+		'saleId',
+		'eef9e6b6-1311-4d5f-968f-3926fb39afa7',
+	);
+	expect(financialStatement).toHaveProperty(
+		'influencerId',
+		'9ce732da-34a9-4adb-89c1-557693638420',
+	);
+	expect(financialStatement).toHaveProperty(
+		'companyId',
+		'c975f02c-cee8-4630-9fa8-239cc590dfe1',
+	);
+});
+
+test('Deve salvar o extrato financeiro do pedido como estornado', async function () {
+	const financialStatementData = new FinancialStatement(
+		'c975f02c-cee8-4630-9fa8-239cc590dfe1',
+		'9ce732da-34a9-4adb-89c1-557693638420',
+		undefined,
+		8,
+		new Price(8),
+		new Date(),
+		'CREDITO',
+		false,
+		'eef9e6b6-1311-4d5f-968f-3926fb39afa7',
+	);
+	const financialStatement = await financialStatementRepository.create(
+		financialStatementData,
 	);
 	expect(financialStatement).toHaveProperty(
 		'saleId',

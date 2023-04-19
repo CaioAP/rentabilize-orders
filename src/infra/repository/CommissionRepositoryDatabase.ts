@@ -12,6 +12,7 @@ export default class CommissionRepositoryDatabase
 			`
       SELECT * FROM public."EmpresaComissao"
       WHERE "empresaId" = $1
+			ORDER BY nivel ASC
     `,
 			[companyId],
 		);

@@ -6,6 +6,10 @@ export default class OrderStatus {
 			this.name,
 		);
 	}
+
+	isRefunded() {
+		return ['Estornado'].includes(this.name);
+	}
 }
 
 export type StatusName =
