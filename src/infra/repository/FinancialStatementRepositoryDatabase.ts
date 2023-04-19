@@ -50,10 +50,11 @@ export default class FinancialStatementRepositoryDatabase
 	): Promise<FinancialStatement | null> {
 		const [financialStatementData] = await this.connection.query(
 			`
-      SELECT * FROM public."Financeiro"
-      WHERE "pedidoId" = $1
-        AND "empresaId" = $2
-        AND "influenciadorId" = $3;
+      SELECT f.* FROM public."Financeiro" f
+			INNER JOIN public."Pedido" p ON p.id = f."pedidoId"
+      WHERE p."idExt" = $1
+        AND f."empresaId" = $2
+        AND f."influenciadorId" = $3;
     `,
 			[saleId, companyId, influencerId],
 		);

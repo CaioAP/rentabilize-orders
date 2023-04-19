@@ -162,6 +162,23 @@ test('Deve criar o extrato financeiro do pedido', async function () {
 	);
 });
 
+test('Deve buscar extrato financeiro pelo pedido, empresa e influenciador', async function () {
+	const input = {
+		saleId: '59123',
+		companyId: 'c975f02c-cee8-4630-9fa8-239cc590dfe1',
+		influencerId: '9ce732da-34a9-4adb-89c1-557693638420',
+	};
+	const statement = await financialStatementRepository.getByFilter(
+		input.saleId,
+		input.companyId,
+		input.influencerId,
+	);
+	expect(statement).toHaveProperty(
+		'saleId',
+		'eef9e6b6-1311-4d5f-968f-3926fb39afa7',
+	);
+});
+
 test.todo(
 	'Deve salvar o extrato financeiro do pedido',
 	// async function () {
