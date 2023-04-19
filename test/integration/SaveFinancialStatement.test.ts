@@ -1,3 +1,4 @@
+import BalanceRepository from '../../src/application/repository/BalanceRepository';
 import CommissionRepository from '../../src/application/repository/CommissionRepository';
 import CompanyRepository from '../../src/application/repository/CompanyRepository';
 import FinancialStatementRepository from '../../src/application/repository/FinancialStatementRepository';
@@ -6,13 +7,13 @@ import GetCommissions from '../../src/application/usecase/GetComissions';
 import GetCompany from '../../src/application/usecase/GetCompany';
 import GetInfluencerByCoupon from '../../src/application/usecase/GetInfluencerByCoupon';
 import GetInfluencerInviter from '../../src/application/usecase/GetInfluencerInviter';
+import SaveBalance from '../../src/application/usecase/SaveBalance';
 import SaveFinancialStatement from '../../src/application/usecase/SaveFinancialStatement';
-import FinancialStatement from '../../src/domain/entity/FinancialStatement';
 import { StatusName } from '../../src/domain/entity/OrderStatus';
-import Price from '../../src/domain/entity/Price';
 import Store from '../../src/domain/entity/Store';
 import Connection from '../../src/infra/database/Connection';
 import PgPromise from '../../src/infra/database/PgPromiseAdapter';
+import BalanceRepositoryDatabase from '../../src/infra/repository/BalanceRepositoryDatabase';
 import CommissionRepositoryDatabase from '../../src/infra/repository/CommissionRepositoryDatabase';
 import CompanyRepositoryDatabase from '../../src/infra/repository/CompanyRepositoryDatabase';
 import FinancialStatementRepositoryDatabase from '../../src/infra/repository/FinancialStatementRepositoryDatabase';
@@ -25,10 +26,12 @@ let getCommissions: GetCommissions;
 let getInfluencerByCoupon: GetInfluencerByCoupon;
 let getInfluencerInviter: GetInfluencerInviter;
 let saveFinancialStatement: SaveFinancialStatement;
+let saveBalance: SaveBalance;
 let companyRepository: CompanyRepository;
 let commissionRepository: CommissionRepository;
 let influencerRepository: InfluencerRepository;
 let financialStatementRepository: FinancialStatementRepository;
+let balanceRepository: BalanceRepository;
 
 beforeEach(async function () {
 	store = new Store(
@@ -45,15 +48,18 @@ beforeEach(async function () {
 	financialStatementRepository = new FinancialStatementRepositoryDatabase(
 		connection,
 	);
+	balanceRepository = new BalanceRepositoryDatabase(connection);
 	getCompany = new GetCompany(companyRepository);
 	getCommissions = new GetCommissions(commissionRepository);
 	getInfluencerByCoupon = new GetInfluencerByCoupon(influencerRepository);
 	getInfluencerInviter = new GetInfluencerInviter(influencerRepository);
+	saveBalance = new SaveBalance(balanceRepository);
 	saveFinancialStatement = new SaveFinancialStatement(
 		getCompany,
 		getCommissions,
 		getInfluencerByCoupon,
 		getInfluencerInviter,
+		saveBalance,
 		financialStatementRepository,
 	);
 });
