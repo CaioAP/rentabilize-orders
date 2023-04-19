@@ -53,7 +53,7 @@ export default class SaveOrders implements Usecase {
 			const orderExists: Order | null = await this.orderRepository.getByIdExt(
 				dataFormatted.saleId,
 			);
-			const order = new Order(
+			const orderData = new Order(
 				undefined,
 				dataFormatted.saleId,
 				new Price(dataFormatted.price),
@@ -70,7 +70,7 @@ export default class SaveOrders implements Usecase {
 			for (const item of dataFormatted.items) {
 				const product = products.find((p: Product) => p.sku === item.sku);
 				if (product)
-					order.items.push(
+					orderData.items.push(
 						new OrderItem(
 							product.sku,
 							undefined,
@@ -80,8 +80,10 @@ export default class SaveOrders implements Usecase {
 						),
 					);
 			}
-			if (!orderExists) output.push(await this.orderRepository.create(order));
-			else output.push(await this.orderRepository.update(order));
+			let order: Order;
+			if (!orderExists) order = await this.orderRepository.create(orderData);
+			else order = await this.orderRepository.update(orderData);
+			output.push(order);
 			// await this.saveFinancialStatement.execute();
 		}
 		return output;

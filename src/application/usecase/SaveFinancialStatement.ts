@@ -1,4 +1,7 @@
+import { StatusName } from '../../domain/entity/OrderStatus';
 import Store from '../../domain/entity/Store';
+import validateFinancialStatement from '../../infra/validation/validateFinancialStatement';
+import FinancialStatementRepository from '../repository/FinancialStatementRepository';
 import GetCommissions from './GetComissions';
 import GetCompany from './GetCompany';
 import GetInfluencerByCoupon from './GetInfluencerByCoupon';
@@ -11,6 +14,7 @@ export default class SaveFinancialStatement implements Usecase {
 		readonly getCommissions: GetCommissions,
 		readonly getInfluencerByCoupon: GetInfluencerByCoupon,
 		readonly getInfluencerInviter: GetInfluencerInviter,
+		readonly financialStatementRepository: FinancialStatementRepository,
 	) {}
 
 	async execute(input: Input): Promise<void> {
@@ -25,6 +29,20 @@ export default class SaveFinancialStatement implements Usecase {
 		});
 		if (!commissions.length) throw new Error('No commission found');
 		for (const commission of commissions) {
+			const financialStatement =
+				await this.financialStatementRepository.getByFilter(
+					input.saleId,
+					String(company.id),
+					String(influencer.id),
+				);
+			if (
+				validateFinancialStatement(
+					String(financialStatement?.id),
+					input.date,
+					input.status,
+				)
+			) {
+			}
 			const nextInfluencer = await this.getInfluencerInviter.execute({
 				influencerId: String(influencer.id),
 				companyId: String(company.id),
@@ -35,8 +53,9 @@ export default class SaveFinancialStatement implements Usecase {
 
 type Input = {
 	saleId: string;
-	status: string;
+	status: StatusName;
 	store: Store;
 	price: number;
 	coupon: string;
+	date: Date;
 };
