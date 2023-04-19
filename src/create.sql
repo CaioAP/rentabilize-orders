@@ -268,12 +268,13 @@ CREATE TABLE public."ProdutoComissao" (
     CONSTRAINT "ProdutoComissao_pkey" PRIMARY KEY ("sku")
 );
 CREATE TABLE public."Saldo" (
-    "valor" DOUBLE PRECISION NOT NULL,
+    "id" TEXT NOT NULL,
+    "valor" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "disponivel" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "empresaId" TEXT NOT NULL,
     "influenciadorId" TEXT NOT NULL,
 
-    CONSTRAINT "Saldo_pkey" PRIMARY KEY ("influenciadorId")
+    CONSTRAINT "Saldo_pkey" PRIMARY KEY ("id")
 );
 CREATE TABLE public."Financeiro" (
     "id" TEXT NOT NULL,
@@ -558,3 +559,7 @@ VALUES('283bea5f-7bbe-4f58-86d7-45da09bde2b3', true, '070e04ba-672c-418f-9d9c-2e
 INSERT INTO public."Pedido"
 (id, "idExt", "dataPedido", observacao, "statusPedidoId", "pagamentoTipoId", "clienteId", "cupomId", "lojaId", descontos, valor, "dataAlteracao")
 VALUES('eef9e6b6-1311-4d5f-968f-3926fb39afa7', '59123', '2023-04-07 10:38:43.000', NULL, '35be9020-e170-45c6-a9f4-e957ca373bfc', '24d069ae-fd0c-4aa6-9523-b7fc2fd4d675', '283bea5f-7bbe-4f58-86d7-45da09bde2b3', '09570704-3d65-4f1e-99ab-44fabb5cf662', '2f01c15a-e882-44ac-aedf-5f2754f24404', 30, 100, '2023-04-07 10:40:26.000');
+
+INSERT INTO public."Saldo"
+(valor, "empresaId", "influenciadorId", id, disponivel)
+VALUES(0.0, 'c975f02c-cee8-4630-9fa8-239cc590dfe1', '9ce732da-34a9-4adb-89c1-557693638420', '6627012b-0f6a-4949-bdd8-9028a5d61310', 0.0);
