@@ -563,3 +563,8 @@ VALUES('eef9e6b6-1311-4d5f-968f-3926fb39afa7', '59123', '2023-04-07 10:38:43.000
 INSERT INTO public."Saldo"
 (valor, "empresaId", "influenciadorId", id, disponivel)
 VALUES(0.0, 'c975f02c-cee8-4630-9fa8-239cc590dfe1', '9ce732da-34a9-4adb-89c1-557693638420', '6627012b-0f6a-4949-bdd8-9028a5d61310', 0.0);
+
+INSERT INTO public."ConviteSaldo"
+(id, saldo, "influenciadorId", "empresaId")
+VALUES('b08fec1a-2518-4bfa-977c-a91fdb2e01c3', 0, '9ce732da-34a9-4adb-89c1-557693638420', 'c975f02c-cee8-4630-9fa8-239cc590dfe1');
+
