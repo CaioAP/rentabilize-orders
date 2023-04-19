@@ -3,6 +3,8 @@ import OrderStatus, { StatusName } from './OrderStatus';
 import Price from './Price';
 
 export default class FinancialStatement {
+	type: 'CREDITO' | 'DEBITO';
+	available: boolean;
 	saleId?: string;
 	userId?: string;
 
@@ -13,18 +15,20 @@ export default class FinancialStatement {
 		readonly comission: number,
 		readonly amount: Price,
 		readonly date: Date,
-		readonly type: 'CREDITO' | 'DEBITO',
-		readonly available: boolean = false,
+		type: 'CREDITO' | 'DEBITO',
+		available: boolean = false,
 		saleId?: string,
 		userId?: string,
 	) {
+		this.type = type;
+		this.available = available;
 		this.saleId = saleId;
 		this.userId = userId;
 	}
 
 	isValidToCreate(status: StatusName): boolean {
 		return (
-			!!this.id &&
+			!this.id &&
 			new DateObject(this.date).isToday() &&
 			new OrderStatus(undefined, status).isApproved()
 		);

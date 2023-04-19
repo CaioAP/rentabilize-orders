@@ -31,48 +31,35 @@ export default class SaveFinancialStatement implements Usecase {
 		const output: FinancialStatement[] = [];
 		for (const commission of commissions) {
 			if (!influencer) break;
-			const financialStatement =
-				await this.financialStatementRepository.getByFilter(
+			let financialStatement: FinancialStatement =
+				(await this.financialStatementRepository.getByFilter(
 					input.saleId,
 					String(company.id),
 					String(influencer.id),
+				)) ||
+				new FinancialStatement(
+					String(company.id),
+					String(influencer.id),
+					undefined,
+					commission.value,
+					new Price(commission.calculate(new Price(input.price))),
+					input.date,
+					'CREDITO',
+					false,
+					input.saleId,
 				);
-			let outputData: FinancialStatement | null = null;
 			if (new OrderStatus(undefined, input.status).isRefunded()) {
-				outputData = await this.financialStatementRepository.create(
-					new FinancialStatement(
-						String(company.id),
-						String(influencer.id),
-						undefined,
-						commission.value,
-						new Price(commission.calculate(new Price(input.price))),
-						input.date,
-						'DEBITO',
-						false,
-						input.saleId,
-					),
-				);
-				continue;
-			}
-			if (
-				financialStatement &&
-				financialStatement.isValidToCreate(input.status)
-			) {
-				outputData = await this.financialStatementRepository.create(
-					new FinancialStatement(
-						String(company.id),
-						String(influencer.id),
-						undefined,
-						commission.value,
-						new Price(commission.calculate(new Price(input.price))),
-						input.date,
-						'CREDITO',
-						false,
-						input.saleId,
-					),
+				financialStatement.type = 'DEBITO';
+				financialStatement = await this.financialStatementRepository.create(
+					financialStatement,
 				);
 			}
-			if (outputData) output.push(outputData);
+			if (financialStatement.isValidToCreate(input.status)) {
+				financialStatement = await this.financialStatementRepository.create(
+					financialStatement,
+				);
+			}
+			output.push(financialStatement);
 			influencer = await this.getInfluencerInviter.execute({
 				influencerId: String(influencer.id),
 				companyId: String(company.id),

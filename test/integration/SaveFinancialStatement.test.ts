@@ -6,7 +6,9 @@ import GetCommissions from '../../src/application/usecase/GetComissions';
 import GetCompany from '../../src/application/usecase/GetCompany';
 import GetInfluencerByCoupon from '../../src/application/usecase/GetInfluencerByCoupon';
 import GetInfluencerInviter from '../../src/application/usecase/GetInfluencerInviter';
+import SaveFinancialStatement from '../../src/application/usecase/SaveFinancialStatement';
 import FinancialStatement from '../../src/domain/entity/FinancialStatement';
+import { StatusName } from '../../src/domain/entity/OrderStatus';
 import Price from '../../src/domain/entity/Price';
 import Store from '../../src/domain/entity/Store';
 import Connection from '../../src/infra/database/Connection';
@@ -16,17 +18,26 @@ import CompanyRepositoryDatabase from '../../src/infra/repository/CompanyReposit
 import FinancialStatementRepositoryDatabase from '../../src/infra/repository/FinancialStatementRepositoryDatabase';
 import InfluencerRepositoryDatabase from '../../src/infra/repository/InfluencerRepositoryDatabase';
 
+let store: Store;
 let connection: Connection;
 let getCompany: GetCompany;
 let getCommissions: GetCommissions;
 let getInfluencerByCoupon: GetInfluencerByCoupon;
 let getInfluencerInviter: GetInfluencerInviter;
+let saveFinancialStatement: SaveFinancialStatement;
 let companyRepository: CompanyRepository;
 let commissionRepository: CommissionRepository;
 let influencerRepository: InfluencerRepository;
 let financialStatementRepository: FinancialStatementRepository;
 
 beforeEach(async function () {
+	store = new Store(
+		'2f01c15a-e882-44ac-aedf-5f2754f24404',
+		'New Hair',
+		'https://loja.newhairoficial.com.br',
+		'skKeRUlClgTIwVf7RrgPOTKZcRgs4zxyecReWH4vijYJJzgTiKGir1hrYm2eaeHV4eyHFmWzKpKhpLeLOfM5za8xV5muOY33vrpLqXvaTXhOVg6gTJ4uJP7yQsbBWFlMQtapZ34AYxUD3sjATyrG0SGr1X3gB00Uz2K23k71vhLg3nIC2yigTPkf4QJFnECrI60JtJfZZ20VLpSWExeiedXTIbuIeyigpSQuWoJvpk4UkylIrHnIfPVToIIPe3IT',
+		'Senha123',
+	);
 	connection = new PgPromise();
 	companyRepository = new CompanyRepositoryDatabase(connection);
 	commissionRepository = new CommissionRepositoryDatabase(connection);
@@ -38,6 +49,13 @@ beforeEach(async function () {
 	getCommissions = new GetCommissions(commissionRepository);
 	getInfluencerByCoupon = new GetInfluencerByCoupon(influencerRepository);
 	getInfluencerInviter = new GetInfluencerInviter(influencerRepository);
+	saveFinancialStatement = new SaveFinancialStatement(
+		getCompany,
+		getCommissions,
+		getInfluencerByCoupon,
+		getInfluencerInviter,
+		financialStatementRepository,
+	);
 });
 
 afterEach(async function () {
@@ -82,13 +100,6 @@ test('Não deve buscar o influenciador que convidou caso seja o lider do time', 
 });
 
 test('Deve buscar a empresa da loja', async function () {
-	const store = new Store(
-		'2f01c15a-e882-44ac-aedf-5f2754f24404',
-		'New Hair',
-		'https://loja.newhairoficial.com.br',
-		'skKeRUlClgTIwVf7RrgPOTKZcRgs4zxyecReWH4vijYJJzgTiKGir1hrYm2eaeHV4eyHFmWzKpKhpLeLOfM5za8xV5muOY33vrpLqXvaTXhOVg6gTJ4uJP7yQsbBWFlMQtapZ34AYxUD3sjATyrG0SGr1X3gB00Uz2K23k71vhLg3nIC2yigTPkf4QJFnECrI60JtJfZZ20VLpSWExeiedXTIbuIeyigpSQuWoJvpk4UkylIrHnIfPVToIIPe3IT',
-		'Senha123',
-	);
 	const input = {
 		storeId: store.id,
 	};
@@ -133,33 +144,54 @@ test('Não deve buscar extrato financeiro inexistente', async function () {
 	expect(financialStatement).toBe(null);
 });
 
+// test('Deve salvar o extrato financeiro do pedido', async function () {
+// 	const financialStatementData = new FinancialStatement(
+// 		'c975f02c-cee8-4630-9fa8-239cc590dfe1',
+// 		'9ce732da-34a9-4adb-89c1-557693638420',
+// 		undefined,
+// 		8,
+// 		new Price(8),
+// 		new Date(),
+// 		'CREDITO',
+// 		false,
+// 		'eef9e6b6-1311-4d5f-968f-3926fb39afa7',
+// 	);
+// 	const financialStatement = await financialStatementRepository.create(
+// 		financialStatementData,
+// 	);
+// 	expect(financialStatement).toHaveProperty(
+// 		'saleId',
+// 		'eef9e6b6-1311-4d5f-968f-3926fb39afa7',
+// 	);
+// 	expect(financialStatement).toHaveProperty(
+// 		'influencerId',
+// 		'9ce732da-34a9-4adb-89c1-557693638420',
+// 	);
+// 	expect(financialStatement).toHaveProperty(
+// 		'companyId',
+// 		'c975f02c-cee8-4630-9fa8-239cc590dfe1',
+// 	);
+// 	expect(financialStatement).toHaveProperty('type', 'CREDITO');
+// });
+
 test('Deve salvar o extrato financeiro do pedido', async function () {
-	const financialStatementData = new FinancialStatement(
-		'c975f02c-cee8-4630-9fa8-239cc590dfe1',
-		'9ce732da-34a9-4adb-89c1-557693638420',
-		undefined,
-		8,
-		new Price(8),
-		new Date(),
-		'CREDITO',
-		false,
-		'eef9e6b6-1311-4d5f-968f-3926fb39afa7',
-	);
-	const financialStatement = await financialStatementRepository.create(
-		financialStatementData,
-	);
-	expect(financialStatement).toHaveProperty(
+	const status: StatusName = 'Aprovado';
+	const input = {
+		saleId: 'eef9e6b6-1311-4d5f-968f-3926fb39afa7',
+		status,
+		store,
+		price: 100,
+		coupon: 'cabeluda',
+		date: new Date(),
+	};
+	const financialStatement = await saveFinancialStatement.execute(input);
+	expect(financialStatement).toHaveLength(1);
+	expect(financialStatement[0]).toHaveProperty(
 		'saleId',
 		'eef9e6b6-1311-4d5f-968f-3926fb39afa7',
 	);
-	expect(financialStatement).toHaveProperty(
-		'influencerId',
-		'9ce732da-34a9-4adb-89c1-557693638420',
-	);
-	expect(financialStatement).toHaveProperty(
-		'companyId',
-		'c975f02c-cee8-4630-9fa8-239cc590dfe1',
-	);
+	expect(financialStatement[0]).toHaveProperty('type', 'CREDITO');
+	expect(financialStatement[0]).toHaveProperty('amount', { value: 8 });
 });
 
 test('Deve buscar extrato financeiro pelo pedido, empresa e influenciador', async function () {
@@ -188,58 +220,21 @@ test('Deve buscar extrato financeiro pelo pedido, empresa e influenciador', asyn
 });
 
 test('Deve salvar o extrato financeiro do pedido como estornado', async function () {
-	const financialStatementData = new FinancialStatement(
-		'c975f02c-cee8-4630-9fa8-239cc590dfe1',
-		'9ce732da-34a9-4adb-89c1-557693638420',
-		undefined,
-		8,
-		new Price(8),
-		new Date(),
-		'CREDITO',
-		false,
-		'eef9e6b6-1311-4d5f-968f-3926fb39afa7',
-	);
-	const financialStatement = await financialStatementRepository.create(
-		financialStatementData,
-	);
-	expect(financialStatement).toHaveProperty(
+	const status: StatusName = 'Estornado';
+	const input = {
+		saleId: 'eef9e6b6-1311-4d5f-968f-3926fb39afa7',
+		status,
+		store,
+		price: 100,
+		coupon: 'cabeluda',
+		date: new Date(),
+	};
+	const financialStatement = await saveFinancialStatement.execute(input);
+	expect(financialStatement).toHaveLength(1);
+	expect(financialStatement[0]).toHaveProperty(
 		'saleId',
 		'eef9e6b6-1311-4d5f-968f-3926fb39afa7',
 	);
-	expect(financialStatement).toHaveProperty(
-		'influencerId',
-		'9ce732da-34a9-4adb-89c1-557693638420',
-	);
-	expect(financialStatement).toHaveProperty(
-		'companyId',
-		'c975f02c-cee8-4630-9fa8-239cc590dfe1',
-	);
+	expect(financialStatement[0]).toHaveProperty('type', 'DEBITO');
+	expect(financialStatement[0]).toHaveProperty('amount', { value: 8 });
 });
-
-test.todo(
-	'Deve salvar o extrato financeiro do pedido',
-	// async function () {
-	// 	const input = {
-	// 		saleId: '58123',
-	// 		status: 'Aprovado',
-	// 		store: 'New Hair',
-	// 		price: 156,
-	// 		discount: 0,
-	// 		coupon: 'cabeluda',
-	// 		payment: 'erederest5',
-	// 		dateAdded: new Date('2023-04-18T12:00:00-03:00'),
-	// 		dateModified: new Date('2023-04-18T15:00:00-03:00'),
-	// 		observation: '',
-	// 		client: {
-	// 			cpfCnpj: '11144477735',
-	// 			name: 'Joao da Silva',
-	// 			email: 'joaodasilva@hotmail.com',
-	// 			sex: null,
-	// 			birthdate: null,
-	// 		},
-	// 		items: [],
-	// };
-	// const financialStatement = await saveFinancialStatement.execute(input);
-	// expect(financialStatement).toHaveProperty('amount', )
-	// }
-);

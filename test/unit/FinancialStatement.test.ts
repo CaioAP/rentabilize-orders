@@ -6,7 +6,7 @@ test('Deve testar se o extrato financeiro está valido para ser salvo', function
 	const financialStatement = new FinancialStatement(
 		'c975f02c-cee8-4630-9fa8-239cc590dfe1',
 		'9ce732da-34a9-4adb-89c1-557693638420',
-		crypto.randomUUID(),
+		undefined,
 		8,
 		new Price(8),
 		new Date(),
