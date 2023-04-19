@@ -1,4 +1,6 @@
+import FinancialStatement from '../../domain/entity/FinancialStatement';
 import { StatusName } from '../../domain/entity/OrderStatus';
+import Price from '../../domain/entity/Price';
 import Store from '../../domain/entity/Store';
 import validateFinancialStatement from '../../infra/validation/validateFinancialStatement';
 import FinancialStatementRepository from '../repository/FinancialStatementRepository';
@@ -42,6 +44,19 @@ export default class SaveFinancialStatement implements Usecase {
 					input.status,
 				)
 			) {
+				await this.financialStatementRepository.create(
+					new FinancialStatement(
+						String(company.id),
+						String(influencer.id),
+						undefined,
+						commission.value,
+						new Price(commission.calculate(new Price(input.price))),
+						input.date,
+						'CREDITO',
+						false,
+						input.saleId,
+					),
+				);
 			}
 			const nextInfluencer = await this.getInfluencerInviter.execute({
 				influencerId: String(influencer.id),

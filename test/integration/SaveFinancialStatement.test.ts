@@ -125,12 +125,12 @@ test('Não deve buscar extrato financeiro inexistente', async function () {
 		companyId: 'c975f02c-cee8-4630-9fa8-239cc590dfe1',
 		influencerId: '9ce732da-34a9-4adb-89c1-557693638420',
 	};
-	const statement = await financialStatementRepository.getByFilter(
+	const financialStatement = await financialStatementRepository.getByFilter(
 		input.saleId,
 		input.companyId,
 		input.influencerId,
 	);
-	expect(statement).toBe(null);
+	expect(financialStatement).toBe(null);
 });
 
 test('Deve criar o extrato financeiro do pedido', async function () {
@@ -168,14 +168,22 @@ test('Deve buscar extrato financeiro pelo pedido, empresa e influenciador', asyn
 		companyId: 'c975f02c-cee8-4630-9fa8-239cc590dfe1',
 		influencerId: '9ce732da-34a9-4adb-89c1-557693638420',
 	};
-	const statement = await financialStatementRepository.getByFilter(
+	const financialStatement = await financialStatementRepository.getByFilter(
 		input.saleId,
 		input.companyId,
 		input.influencerId,
 	);
-	expect(statement).toHaveProperty(
+	expect(financialStatement).toHaveProperty(
 		'saleId',
 		'eef9e6b6-1311-4d5f-968f-3926fb39afa7',
+	);
+	expect(financialStatement).toHaveProperty(
+		'influencerId',
+		'9ce732da-34a9-4adb-89c1-557693638420',
+	);
+	expect(financialStatement).toHaveProperty(
+		'companyId',
+		'c975f02c-cee8-4630-9fa8-239cc590dfe1',
 	);
 });
 
