@@ -70,6 +70,15 @@ test('Deve buscar o influenciador que convidou', async function () {
 	);
 });
 
+test('Não deve buscar o influenciador que convidou caso seja o lider do time', async function () {
+	const input = {
+		influencerId: '9ce732da-34a9-4adb-89c1-557693638420',
+		companyId: 'c975f02c-cee8-4630-9fa8-239cc590dfe1',
+	};
+	const influencer = await getInfluencerInviter.execute(input);
+	expect(influencer).toBe(null);
+});
+
 test('Não deve buscar extrato financeiro inexistente', async function () {
 	const input = {
 		saleId: '12345',
