@@ -551,6 +551,9 @@ VALUES('2d5f62ed-c62d-4930-b6ae-ca04a6924003', 'APROVADO'::public."Qualificado",
 INSERT INTO public."Cupom"
 (id, nome, desconto, observacao, descricao, validade, "dataAprovacao", "dataCadastro", ativo, aprovado, "influenciadorId", "usuarioId", "empresaId", motivo)
 VALUES('09570704-3d65-4f1e-99ab-44fabb5cf662', 'CABELUDA', 30, '', '', '2050-12-13 00:00:00.000', '2022-12-28 14:45:07.000', '2021-02-01 00:00:00.000', true, true, '9ce732da-34a9-4adb-89c1-557693638420', NULL, 'c975f02c-cee8-4630-9fa8-239cc590dfe1', NULL);
+INSERT INTO public."Cupom"
+(id, nome, desconto, observacao, descricao, validade, "dataAprovacao", "dataCadastro", ativo, aprovado, "influenciadorId", "usuarioId", "empresaId", motivo)
+VALUES('a0abff68-a9df-40fa-adb9-06016ecd63eb', 'CABELUDA2', 30, '', '', '2050-12-13 00:00:00.000', '2022-12-28 14:45:07.000', '2021-02-01 00:00:00.000', true, true, '150c98aa-4ea1-4329-91e1-fb5ff1b6701e', NULL, 'c975f02c-cee8-4630-9fa8-239cc590dfe1', NULL);
 
 INSERT INTO public."Cliente"
 (id, marketing, "pessoaId")
@@ -563,8 +566,14 @@ VALUES('eef9e6b6-1311-4d5f-968f-3926fb39afa7', '59123', '2023-04-07 10:38:43.000
 INSERT INTO public."Saldo"
 (valor, "empresaId", "influenciadorId", id, disponivel)
 VALUES(0.0, 'c975f02c-cee8-4630-9fa8-239cc590dfe1', '9ce732da-34a9-4adb-89c1-557693638420', '6627012b-0f6a-4949-bdd8-9028a5d61310', 0.0);
+INSERT INTO public."Saldo"
+(valor, "empresaId", "influenciadorId", id, disponivel)
+VALUES(0.0, 'c975f02c-cee8-4630-9fa8-239cc590dfe1', '150c98aa-4ea1-4329-91e1-fb5ff1b6701e', 'b177d25d-0d88-440c-ae8b-1d26b11be9e0', 0.0);
 
 INSERT INTO public."ConviteSaldo"
 (id, saldo, "influenciadorId", "empresaId")
 VALUES('b08fec1a-2518-4bfa-977c-a91fdb2e01c3', 0, '9ce732da-34a9-4adb-89c1-557693638420', 'c975f02c-cee8-4630-9fa8-239cc590dfe1');
+INSERT INTO public."ConviteSaldo"
+(id, saldo, "influenciadorId", "empresaId")
+VALUES('a14e09bc-de74-40c7-b7ce-62a451be5651', 0, '150c98aa-4ea1-4329-91e1-fb5ff1b6701e', 'c975f02c-cee8-4630-9fa8-239cc590dfe1');
 

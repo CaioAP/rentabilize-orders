@@ -1,3 +1,4 @@
+import BalanceInviteRepository from '../../src/application/repository/BalanceInviteRepository';
 import BalanceRepository from '../../src/application/repository/BalanceRepository';
 import CommissionRepository from '../../src/application/repository/CommissionRepository';
 import CompanyRepository from '../../src/application/repository/CompanyRepository';
@@ -8,11 +9,13 @@ import GetCompany from '../../src/application/usecase/GetCompany';
 import GetInfluencerByCoupon from '../../src/application/usecase/GetInfluencerByCoupon';
 import GetInfluencerInviter from '../../src/application/usecase/GetInfluencerInviter';
 import SaveBalance from '../../src/application/usecase/SaveBalance';
+import SaveBalanceInvite from '../../src/application/usecase/SaveBalanceInvite';
 import SaveFinancialStatement from '../../src/application/usecase/SaveFinancialStatement';
 import { StatusName } from '../../src/domain/entity/OrderStatus';
 import Store from '../../src/domain/entity/Store';
 import Connection from '../../src/infra/database/Connection';
 import PgPromise from '../../src/infra/database/PgPromiseAdapter';
+import BalanceInviteRepositoryDatabase from '../../src/infra/repository/BalanceInviteRepositoryDatabase';
 import BalanceRepositoryDatabase from '../../src/infra/repository/BalanceRepositoryDatabase';
 import CommissionRepositoryDatabase from '../../src/infra/repository/CommissionRepositoryDatabase';
 import CompanyRepositoryDatabase from '../../src/infra/repository/CompanyRepositoryDatabase';
@@ -27,11 +30,13 @@ let getInfluencerByCoupon: GetInfluencerByCoupon;
 let getInfluencerInviter: GetInfluencerInviter;
 let saveFinancialStatement: SaveFinancialStatement;
 let saveBalance: SaveBalance;
+let saveBalanceInvite: SaveBalanceInvite;
 let companyRepository: CompanyRepository;
 let commissionRepository: CommissionRepository;
 let influencerRepository: InfluencerRepository;
 let financialStatementRepository: FinancialStatementRepository;
 let balanceRepository: BalanceRepository;
+let balanceInviteRepository: BalanceInviteRepository;
 
 beforeEach(async function () {
 	store = new Store(
@@ -49,17 +54,20 @@ beforeEach(async function () {
 		connection,
 	);
 	balanceRepository = new BalanceRepositoryDatabase(connection);
+	balanceInviteRepository = new BalanceInviteRepositoryDatabase(connection);
 	getCompany = new GetCompany(companyRepository);
 	getCommissions = new GetCommissions(commissionRepository);
 	getInfluencerByCoupon = new GetInfluencerByCoupon(influencerRepository);
 	getInfluencerInviter = new GetInfluencerInviter(influencerRepository);
 	saveBalance = new SaveBalance(balanceRepository);
+	saveBalanceInvite = new SaveBalanceInvite(balanceInviteRepository);
 	saveFinancialStatement = new SaveFinancialStatement(
 		getCompany,
 		getCommissions,
 		getInfluencerByCoupon,
 		getInfluencerInviter,
 		saveBalance,
+		saveBalanceInvite,
 		financialStatementRepository,
 	);
 });
@@ -157,17 +165,18 @@ test('Deve salvar o extrato financeiro do pedido', async function () {
 		status,
 		store,
 		price: 100,
-		coupon: 'cabeluda',
+		coupon: 'cabeluda2',
 		date: new Date(),
 	};
 	const financialStatement = await saveFinancialStatement.execute(input);
-	expect(financialStatement).toHaveLength(1);
+	expect(financialStatement).toHaveLength(2);
 	expect(financialStatement[0]).toHaveProperty(
 		'saleId',
 		'eef9e6b6-1311-4d5f-968f-3926fb39afa7',
 	);
 	expect(financialStatement[0]).toHaveProperty('type', 'CREDITO');
-	expect(financialStatement[0]).toHaveProperty('amount', { value: 8 });
+	expect(financialStatement[0].amount).toEqual({ value: 8 });
+	expect(financialStatement[1].amount).toEqual({ value: 2 });
 });
 
 test('Deve buscar extrato financeiro pelo pedido, empresa e influenciador', async function () {
@@ -202,15 +211,16 @@ test('Deve salvar o extrato financeiro do pedido como estornado', async function
 		status,
 		store,
 		price: 100,
-		coupon: 'cabeluda',
+		coupon: 'cabeluda2',
 		date: new Date(),
 	};
 	const financialStatement = await saveFinancialStatement.execute(input);
-	expect(financialStatement).toHaveLength(1);
+	expect(financialStatement).toHaveLength(2);
 	expect(financialStatement[0]).toHaveProperty(
 		'saleId',
 		'eef9e6b6-1311-4d5f-968f-3926fb39afa7',
 	);
 	expect(financialStatement[0]).toHaveProperty('type', 'DEBITO');
-	expect(financialStatement[0]).toHaveProperty('amount', { value: 8 });
+	expect(financialStatement[0].amount).toEqual({ value: 8 });
+	expect(financialStatement[1].amount).toEqual({ value: 2 });
 });

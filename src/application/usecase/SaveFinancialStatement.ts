@@ -8,6 +8,7 @@ import GetCompany from './GetCompany';
 import GetInfluencerByCoupon from './GetInfluencerByCoupon';
 import GetInfluencerInviter from './GetInfluencerInviter';
 import SaveBalance from './SaveBalance';
+import SaveBalanceInvite from './SaveBalanceInvite';
 import Usecase from './Usecase';
 
 export default class SaveFinancialStatement implements Usecase {
@@ -17,6 +18,7 @@ export default class SaveFinancialStatement implements Usecase {
 		readonly getInfluencerByCoupon: GetInfluencerByCoupon,
 		readonly getInfluencerInviter: GetInfluencerInviter,
 		readonly saveBalance: SaveBalance,
+		readonly saveBalanceInvite: SaveBalanceInvite,
 		readonly financialStatementRepository: FinancialStatementRepository,
 	) {}
 
@@ -61,12 +63,24 @@ export default class SaveFinancialStatement implements Usecase {
 					companyId: financialStatement.companyId,
 					increment: false,
 				});
+				await this.saveBalanceInvite.execute({
+					amount: financialStatement.amount.value,
+					influencerId: financialStatement.influencerId,
+					companyId: financialStatement.companyId,
+					increment: false,
+				});
 			}
 			if (financialStatement.isValidToCreate(input.status)) {
 				financialStatement = await this.financialStatementRepository.create(
 					financialStatement,
 				);
 				await this.saveBalance.execute({
+					amount: financialStatement.amount.value,
+					influencerId: financialStatement.influencerId,
+					companyId: financialStatement.companyId,
+					increment: true,
+				});
+				await this.saveBalanceInvite.execute({
 					amount: financialStatement.amount.value,
 					influencerId: financialStatement.influencerId,
 					companyId: financialStatement.companyId,
