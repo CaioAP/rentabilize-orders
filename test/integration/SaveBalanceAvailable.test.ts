@@ -26,3 +26,13 @@ test('Deve buscar os extratos financeiros não disponiveis dos pedidos de uma da
 	expect(financialStatements[0]).toHaveProperty('available', false);
 	expect(financialStatements[1]).toHaveProperty('available', false);
 });
+
+test('Deve atualizar o extrato financeiro como disponivel', async function () {
+	const financialStatement =
+		await financialStatementRepository.updateAvailability(
+			'2f0ff08a-4ed3-4b69-a157-4ef0a392cb91',
+			true,
+		);
+	expect(financialStatement.id).toBe('2f0ff08a-4ed3-4b69-a157-4ef0a392cb91');
+	expect(financialStatement.available).toBe(true);
+});

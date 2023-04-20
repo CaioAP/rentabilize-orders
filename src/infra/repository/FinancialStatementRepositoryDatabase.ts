@@ -44,6 +44,34 @@ export default class FinancialStatementRepositoryDatabase
 		);
 	}
 
+	async updateAvailability(
+		id: string,
+		available: boolean,
+	): Promise<FinancialStatement> {
+		const [financialStatement] = await this.connection.query(
+			`
+			UPDATE public."Financeiro" SET
+				disponivel = $1
+			WHERE id = $2
+			RETURNING *
+		`,
+			[available, id],
+		);
+		if (!financialStatement) throw new Error('Financial statement not found');
+		return new FinancialStatement(
+			financialStatement.empresaId,
+			financialStatement.influenciadorId,
+			financialStatement.id,
+			financialStatement.comissao,
+			new Price(financialStatement.valor),
+			financialStatement.dataLancamento,
+			financialStatement.tipo,
+			financialStatement.disponivel,
+			financialStatement.pedidoId,
+			financialStatement.usuarioId,
+		);
+	}
+
 	async getByFilter(
 		saleId: string,
 		companyId: string,
