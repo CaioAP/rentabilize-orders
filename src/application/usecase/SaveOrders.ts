@@ -12,6 +12,7 @@ import GetPaymentType from './GetPaymentType';
 import Price from '../../domain/entity/Price';
 import OrderItem from '../../domain/entity/OrderItem';
 import Product from '../../domain/entity/Product';
+import SaveFinancialStatement from './SaveFinancialStatement';
 
 export default class SaveOrders implements Usecase {
 	constructor(
@@ -21,7 +22,7 @@ export default class SaveOrders implements Usecase {
 		readonly getCoupon: GetCoupon,
 		readonly saveClient: SaveClient,
 		readonly saveProducts: SaveProducts,
-		// readonly saveFinancialStatement: SaveFinancialStatement,
+		readonly saveFinancialStatement: SaveFinancialStatement,
 		readonly orderRepository: OrderRepository,
 	) {}
 
@@ -84,7 +85,15 @@ export default class SaveOrders implements Usecase {
 			if (!orderExists) order = await this.orderRepository.create(orderData);
 			else order = await this.orderRepository.update(orderData);
 			output.push(order);
-			// await this.saveFinancialStatement.execute();
+			if (coupon)
+				await this.saveFinancialStatement.execute({
+					saleId: String(order.id),
+					status: status.name,
+					store: input.store,
+					price: dataFormatted.price,
+					coupon: coupon.name,
+					date: input.date,
+				});
 		}
 		return output;
 	}

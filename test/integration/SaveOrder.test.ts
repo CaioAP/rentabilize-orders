@@ -34,28 +34,51 @@ import InfluencerRepositoryDatabase from '../../src/infra/repository/InfluencerR
 import GetPaymentType from '../../src/application/usecase/GetPaymentType';
 import FinancialStatementRepositoryDatabase from '../../src/infra/repository/FinancialStatementRepositoryDatabase';
 import FinancialStatementRepository from '../../src/application/repository/FinancialStatementRepository';
+import SaveFinancialStatement from '../../src/application/usecase/SaveFinancialStatement';
+import GetCompany from '../../src/application/usecase/GetCompany';
+import CompanyRepository from '../../src/application/repository/CompanyRepository';
+import CompanyRepositoryDatabase from '../../src/infra/repository/CompanyRepositoryDatabase';
+import GetCommissions from '../../src/application/usecase/GetComissions';
+import CommissionRepository from '../../src/application/repository/CommissionRepository';
+import CommissionRepositoryDatabase from '../../src/infra/repository/CommissionRepositoryDatabase';
+import GetInfluencerInviter from '../../src/application/usecase/GetInfluencerInviter';
+import SaveBalance from '../../src/application/usecase/SaveBalance';
+import SaveBalanceInvite from '../../src/application/usecase/SaveBalanceInvite';
+import BalanceRepository from '../../src/application/repository/BalanceRepository';
+import BalanceInviteRepository from '../../src/application/repository/BalanceInviteRepository';
+import BalanceRepositoryDatabase from '../../src/infra/repository/BalanceRepositoryDatabase';
+import BalanceInviteRepositoryDatabase from '../../src/infra/repository/BalanceInviteRepositoryDatabase';
 
 let connection: Connection;
 let searchOrders: SearchOrders;
 let saveOrders: SaveOrders;
+let saveBalance: SaveBalance;
+let saveBalanceInvite: SaveBalanceInvite;
+let saveClient: SaveClient;
+let saveProducts: SaveProducts;
+let saveFinancialStatement: SaveFinancialStatement;
 let getOrder: GetOrder;
 let getOrderStatus: GetOrderStatus;
 let getPaymentType: GetPaymentType;
 let getCoupon: GetCoupon;
+let getCompany: GetCompany;
+let getCommissions: GetCommissions;
 let getInfluencerByCoupon: GetInfluencerByCoupon;
-let saveClient: SaveClient;
-let saveProducts: SaveProducts;
-// let saveFinancialStatement: SaveFinancialStatement;
+let getInfluencerInviter: GetInfluencerInviter;
 let orderRepository: OrderRepository;
 let orderStatusRepository: OrderStatusRepository;
 let orderStatusMapRepository: OrderStatusMapRepository;
 let marketplaceStatusRepository: MarketplaceStatusRepository;
 let paymentTypeRepository: PaymentTypeRepository;
+let companyRepository: CompanyRepository;
+let commissionRepository: CommissionRepository;
 let couponRepository: CouponRepository;
 let clientRepository: ClientRepository;
 let productRepository: ProductRepository;
 let influencerRepository: InfluencerRepository;
 let financialStatementRepository: FinancialStatementRepository;
+let balanceRepository: BalanceRepository;
+let balanceInviteRepository: BalanceInviteRepository;
 let store: Store;
 
 beforeEach(async function () {
@@ -76,6 +99,8 @@ beforeEach(async function () {
 		connection,
 	);
 	paymentTypeRepository = new PaymentTypeRepositoryDatabase(connection);
+	companyRepository = new CompanyRepositoryDatabase(connection);
+	commissionRepository = new CommissionRepositoryDatabase(connection);
 	couponRepository = new CouponRepositoryDatabase(connection);
 	clientRepository = new ClientRepositoryDatabase(connection);
 	productRepository = new ProductRepositoryDatabase(connection);
@@ -83,6 +108,8 @@ beforeEach(async function () {
 	financialStatementRepository = new FinancialStatementRepositoryDatabase(
 		connection,
 	);
+	balanceRepository = new BalanceRepositoryDatabase(connection);
+	balanceInviteRepository = new BalanceInviteRepositoryDatabase(connection);
 	searchOrders = new SearchOrders(storeGateway);
 	getOrder = new GetOrder(orderRepository);
 	getOrderStatus = new GetOrderStatus(
@@ -92,10 +119,23 @@ beforeEach(async function () {
 	);
 	getPaymentType = new GetPaymentType(paymentTypeRepository);
 	getCoupon = new GetCoupon(couponRepository);
+	getCompany = new GetCompany(companyRepository);
+	getCommissions = new GetCommissions(commissionRepository);
 	getInfluencerByCoupon = new GetInfluencerByCoupon(influencerRepository);
+	getInfluencerInviter = new GetInfluencerInviter(influencerRepository);
 	saveClient = new SaveClient(clientRepository);
 	saveProducts = new SaveProducts(productRepository);
-	// saveFinancialStatement = new SaveFinancialStatement(getInfluencerByCoupon);
+	saveBalance = new SaveBalance(balanceRepository);
+	saveBalanceInvite = new SaveBalanceInvite(balanceInviteRepository);
+	saveFinancialStatement = new SaveFinancialStatement(
+		getCompany,
+		getCommissions,
+		getInfluencerByCoupon,
+		getInfluencerInviter,
+		saveBalance,
+		saveBalanceInvite,
+		financialStatementRepository,
+	);
 	saveOrders = new SaveOrders(
 		searchOrders,
 		getOrderStatus,
@@ -103,7 +143,7 @@ beforeEach(async function () {
 		getCoupon,
 		saveClient,
 		saveProducts,
-		// saveFinancialStatement,
+		saveFinancialStatement,
 		orderRepository,
 	);
 });
