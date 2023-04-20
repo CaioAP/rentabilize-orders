@@ -52,7 +52,7 @@ export default class FinancialStatementRepositoryDatabase
 			`
       SELECT f.* FROM public."Financeiro" f
 			INNER JOIN public."Pedido" p ON p.id = f."pedidoId"
-      WHERE p."idExt" = $1
+      WHERE p.id = $1
         AND f."empresaId" = $2
         AND f."influenciadorId" = $3;
     `,

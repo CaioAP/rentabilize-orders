@@ -35,12 +35,14 @@ export default class SaveFinancialStatement implements Usecase {
 		const output: FinancialStatement[] = [];
 		for (const commission of commissions) {
 			if (!influencer) break;
-			let financialStatement: FinancialStatement =
-				(await this.financialStatementRepository.getByFilter(
+			const financialStatementExists =
+				await this.financialStatementRepository.getByFilter(
 					input.saleId,
 					String(company.id),
 					String(influencer.id),
-				)) ||
+				);
+			let financialStatement: FinancialStatement =
+				financialStatementExists ||
 				new FinancialStatement(
 					String(company.id),
 					String(influencer.id),
@@ -69,6 +71,7 @@ export default class SaveFinancialStatement implements Usecase {
 					companyId: financialStatement.companyId,
 					increment: false,
 				});
+				output.push(financialStatement);
 			}
 			if (financialStatement.isValidToCreate(input.status)) {
 				financialStatement = await this.financialStatementRepository.create(
@@ -86,8 +89,8 @@ export default class SaveFinancialStatement implements Usecase {
 					companyId: financialStatement.companyId,
 					increment: true,
 				});
+				output.push(financialStatement);
 			}
-			output.push(financialStatement);
 			influencer = await this.getInfluencerInviter.execute({
 				influencerId: String(influencer.id),
 				companyId: String(company.id),
