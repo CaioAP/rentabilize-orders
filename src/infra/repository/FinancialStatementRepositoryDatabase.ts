@@ -79,13 +79,20 @@ export default class FinancialStatementRepositoryDatabase
 		const endOfDate = new DateObject(date).getEndOfDate();
 		const data = await this.connection.query(
 			`
-			SELECT f.* FROM public."Financeiro" f
-			INNER JOIN public."Pedido" p ON p.id = f."pedidoId"
+			SELECT f1.* FROM public."Financeiro" f1
+			INNER JOIN public."Pedido" p ON p.id = f1."pedidoId"
 			INNER JOIN public."StatusPedido" sp ON sp.id = p."statusPedidoId"
-			WHERE f."dataLancamento" >= $1
-				AND f."dataLancamento" <= $2
-				AND f."pedidoId" IS NOT NULL
-				AND f.disponivel = false
+			WHERE f1."dataLancamento" >= $1
+				AND f1."dataLancamento" <= $2
+				AND f1."pedidoId" IS NOT NULL
+				AND f1.tipo = 'CREDITO'
+				AND f1.disponivel = false
+				AND NOT EXISTS (
+					SELECT 1 FROM public."Financeiro" f2
+					WHERE f2."dataLancamento" = f1."dataLancamento"
+						AND f2."pedidoId" = f1."pedidoId"
+						AND f2.tipo = 'DEBITO'
+				)
 				AND sp.nome IN ($3, $4, $5, $6)
 		`,
 			[
