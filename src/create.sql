@@ -562,6 +562,9 @@ VALUES('283bea5f-7bbe-4f58-86d7-45da09bde2b3', true, '070e04ba-672c-418f-9d9c-2e
 INSERT INTO public."Pedido"
 (id, "idExt", "dataPedido", observacao, "statusPedidoId", "pagamentoTipoId", "clienteId", "cupomId", "lojaId", descontos, valor, "dataAlteracao")
 VALUES('eef9e6b6-1311-4d5f-968f-3926fb39afa7', '59123', '2023-04-07 10:38:43.000', NULL, '35be9020-e170-45c6-a9f4-e957ca373bfc', '24d069ae-fd0c-4aa6-9523-b7fc2fd4d675', '283bea5f-7bbe-4f58-86d7-45da09bde2b3', '09570704-3d65-4f1e-99ab-44fabb5cf662', '2f01c15a-e882-44ac-aedf-5f2754f24404', 30, 100, '2023-04-07 10:40:26.000');
+INSERT INTO public."Pedido"
+(id, "idExt", "dataPedido", observacao, "statusPedidoId", "pagamentoTipoId", "clienteId", "cupomId", "lojaId", descontos, valor, "dataAlteracao")
+VALUES('23c72b0e-0a04-4d34-b862-0e2094816894', '59124', '2023-04-13 10:38:43.000', NULL, '35be9020-e170-45c6-a9f4-e957ca373bfc', '24d069ae-fd0c-4aa6-9523-b7fc2fd4d675', '283bea5f-7bbe-4f58-86d7-45da09bde2b3', '09570704-3d65-4f1e-99ab-44fabb5cf662', '2f01c15a-e882-44ac-aedf-5f2754f24404', 30, 100, '2023-04-13 10:40:26.000');
 
 INSERT INTO public."Saldo"
 (valor, "empresaId", "influenciadorId", id, disponivel)
@@ -576,4 +579,11 @@ VALUES('b08fec1a-2518-4bfa-977c-a91fdb2e01c3', 0, '9ce732da-34a9-4adb-89c1-55769
 INSERT INTO public."ConviteSaldo"
 (id, saldo, "influenciadorId", "empresaId")
 VALUES('a14e09bc-de74-40c7-b7ce-62a451be5651', 0, '150c98aa-4ea1-4329-91e1-fb5ff1b6701e', 'c975f02c-cee8-4630-9fa8-239cc590dfe1');
+
+INSERT INTO public."Financeiro"
+(id, comissao, valor, "dataLancamento", tipo, "pedidoId", "influenciadorId", "empresaId", "usuarioId", disponivel)
+VALUES('2f0ff08a-4ed3-4b69-a157-4ef0a392cb91', 8.0, 8.0, '2023-04-13 10:25:38.578', 'CREDITO'::public."TipoFinanceiro", '23c72b0e-0a04-4d34-b862-0e2094816894', '150c98aa-4ea1-4329-91e1-fb5ff1b6701e', 'c975f02c-cee8-4630-9fa8-239cc590dfe1', NULL, false);
+INSERT INTO public."Financeiro"
+(id, comissao, valor, "dataLancamento", tipo, "pedidoId", "influenciadorId", "empresaId", "usuarioId", disponivel)
+VALUES('3e0698a3-3a70-46fb-bd53-199559facf4a', 2.0, 2.0, '2023-04-13 10:25:38.578', 'CREDITO'::public."TipoFinanceiro", '23c72b0e-0a04-4d34-b862-0e2094816894', '9ce732da-34a9-4adb-89c1-557693638420', 'c975f02c-cee8-4630-9fa8-239cc590dfe1', NULL, false);
 

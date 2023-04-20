@@ -24,4 +24,20 @@ export default class DateObject {
 	isToday(): boolean {
 		return isToday(new Date(this.value));
 	}
+
+	getStartOfDate(): Date {
+		return parse(
+			format(new Date(this.value), 'yyyy-MM-dd 00:00:00.000'),
+			'yyyy-MM-dd HH:mm:ss.SSS',
+			new Date(),
+		);
+	}
+
+	getEndOfDate(): Date {
+		return parse(
+			format(new Date(this.value), 'yyyy-MM-dd 23:59:59.999'),
+			'yyyy-MM-dd HH:mm:ss.SSS',
+			new Date(),
+		);
+	}
 }

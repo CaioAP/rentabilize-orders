@@ -7,4 +7,5 @@ export default interface FinancialStatementRepository {
 		companyId: string,
 		influencerId: string,
 	): Promise<FinancialStatement | null>;
+	getNotAvailableOnDate(date: Date): Promise<FinancialStatement[]>;
 }

@@ -1,4 +1,5 @@
 import FinancialStatementRepository from '../../application/repository/FinancialStatementRepository';
+import DateObject from '../../domain/entity/Date';
 import FinancialStatement from '../../domain/entity/FinancialStatement';
 import Price from '../../domain/entity/Price';
 import Connection from '../database/Connection';
@@ -71,5 +72,48 @@ export default class FinancialStatementRepositoryDatabase
 			financialStatementData.pedidoId,
 			financialStatementData.usuarioId,
 		);
+	}
+
+	async getNotAvailableOnDate(date: Date): Promise<FinancialStatement[]> {
+		const startOfDate = new DateObject(date).getStartOfDate();
+		const endOfDate = new DateObject(date).getEndOfDate();
+		const data = await this.connection.query(
+			`
+			SELECT f.* FROM public."Financeiro" f
+			INNER JOIN public."Pedido" p ON p.id = f."pedidoId"
+			INNER JOIN public."StatusPedido" sp ON sp.id = p."statusPedidoId"
+			WHERE f."dataLancamento" >= $1
+				AND f."dataLancamento" <= $2
+				AND f."pedidoId" IS NOT NULL
+				AND f.disponivel = false
+				AND sp.nome IN ($3, $4, $5, $6)
+		`,
+			[
+				startOfDate,
+				endOfDate,
+				'Aprovado',
+				'Em separação',
+				'Enviado',
+				'Entregue',
+			],
+		);
+		const output: FinancialStatement[] = [];
+		for (const item of data) {
+			output.push(
+				new FinancialStatement(
+					item.empresaId,
+					item.influenciadorId,
+					item.id,
+					item.comissao,
+					new Price(item.valor),
+					item.dataLancamento,
+					item.tipo,
+					item.disponivel,
+					item.pedidoId,
+					item.usuarioId,
+				),
+			);
+		}
+		return output;
 	}
 }
