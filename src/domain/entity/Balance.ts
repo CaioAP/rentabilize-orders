@@ -19,11 +19,19 @@ export default class Balance {
 		this.influencerId = influencerId;
 	}
 
-	increment(amount: Price) {
+	increment(amount: Price): void {
 		this.amount.value += amount.value;
 	}
 
-	decrement(amount: Price) {
+	incrementAvailable(amount: Price): void {
+		this.available.value += amount.value;
+	}
+
+	decrement(amount: Price): void {
 		this.amount.value -= amount.value;
+	}
+
+	decrementAvailable(amount: Price): void {
+		this.available.value -= amount.value;
 	}
 }
